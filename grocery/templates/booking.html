@@ -1,0 +1,228 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+<style>
+.booking-container {
+    max-width: 650px;
+    margin: 2rem auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.booking-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.booking-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.booking-form {
+    background: white;
+    padding: 1.8rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.form-row {
+    gap: 16px;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.form-control {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+}
+
+.total-section {
+    padding: 1rem;
+    margin: 1.5rem 0;
+}
+
+.total-section .form-control {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4EA685;
+    text-align: center;
+}
+
+/* Floating Confirm Button Styles */
+.confirm-btn-container {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    z-index: 1000;
+}
+
+.confirm-btn {
+    background: linear-gradient(45deg, #4EA685, #8bc34a);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(78, 166, 133, 0.3);
+    animation: floatButton 3s ease-in-out infinite;
+}
+
+@keyframes floatButton {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    50% {
+        transform: translateX(-10px) translateY(-5px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(78, 166, 133, 0.4);
+    animation: none;
+}
+
+/* Add a pulse effect to draw attention */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(78, 166, 133, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(78, 166, 133, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(78, 166, 133, 0);
+    }
+}
+
+/* Success message animation */
+.success-alert {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        margin: 1rem auto;
+    }
+    
+    .booking-form {
+        padding: 1.2rem;
+    }
+    
+    .confirm-btn-container {
+        right: 20px;
+        bottom: 20px;
+    }
+    
+    .confirm-btn {
+        padding: 12px 25px;
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+<div class="booking-container">
+    <div class="booking-header">
+        <h2>Confirm Booking Details</h2>
+    </div>
+
+    <form method="post" action="" enctype="multipart/form-data" class="booking-form">
+    {% csrf_token %}
+    <div class="form-row">
+            <div class="form-group">
+                <label for="inputEmail4">Booking ID</label>
+      <input type="text" class="form-control" name="book_id" value="{{book_id}}" id="inputEmail4" readonly>
+    </div>
+            <div class="form-group">
+      <label for="inputPassword4">Customer Name</label>
+      <input type="text" class="form-control" name="name" value="{{request.user.username}}" id="inputPassword4" readonly>
+    </div>
+  </div>
+
+    <div class="form-row">
+            <div class="form-group">
+      <label for="inputEmail4">Booking Date</label>
+      <input type="text" class="form-control" name="date1" value="{{date1}}" id="inputEmail4" readonly>
+    </div>
+            <div class="form-group">
+      <label for="inputPassword4">Email</label>
+      <input type="email" class="form-control" name="email" value="{{request.user.email}}" id="inputPassword4" readonly>
+    </div>
+  </div>
+
+        <div class="form-row">
+            <div class="form-group">
+    <label for="exampleInputEmail1">City</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" name="city" value="{{data.city}}" readonly>
+  </div>
+            <div class="form-group">
+    <label for="exampleInputPassword1">Contact</label>
+    <input type="text" class="form-control" id="exampleInputPassword1" value="{{data.contact}}" name="contact" readonly>
+  </div>
+        </div>
+
+        <div class="form-row full-width">
+            <div class="form-group">
+    <label for="exampleInputPassword1">Address</label>
+    <input type="text" class="form-control" id="exampleInputPassword1" name="add" value="{{data.address}}" readonly>
+  </div>
+        </div>
+
+        <div class="total-section">
+            <div class="form-group">
+                <label for="total">Total Amount</label>
+          <input type="number" class="form-control" id="total" value="{{ total }}" name="total" readonly>
+      </div>
+    </div>
+    </form>
+</div>
+
+<!-- Add floating button container outside the form -->
+<div class="confirm-btn-container">
+    <button type="submit" form="booking-form" class="confirm-btn">
+        Confirm Booking
+        <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+    </button>
+</div>
+
+<!-- Update the form ID to match the button's form attribute -->
+<script>
+document.querySelector('.booking-form').id = 'booking-form';
+
+// Add pulse animation when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const button = document.querySelector('.confirm-btn');
+    button.style.animation = 'pulse 2s infinite, floatButton 3s ease-in-out infinite';
+});
+</script>
+
+{% if error %}
+<div class="success-alert">
+    Registered Successfully!
+</div>
+<script>
+    setTimeout(function() {
+    window.location = "{% url 'login' %}";
+    }, 2000);
+</script>
+{% endif %}
+
+{% endblock %}

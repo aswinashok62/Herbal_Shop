@@ -1,0 +1,44 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+<div class="container">
+    <h2 style="margin-top:20px" align="center">Booking Between Dates Report :</h2>
+    <hr>
+
+    <div class="container-fluid" style="width:70%;margin-top:10%">
+        <form method="post" action="" onsubmit="return validateDates()">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>From Date</label>
+                <input type="date" class="form-control" id="fromdate" name="fromdate" required>
+
+                <label>To Date</label>
+                <input type="date" class="form-control" id="todate" name="todate" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateDates() {
+        let fromDate = document.getElementById("fromdate").value;
+        let toDate = document.getElementById("todate").value;
+
+        if (fromDate === "" || toDate === "") {
+            alert("Both dates are required!");
+            return false;
+        }
+
+        if (new Date(toDate) < new Date(fromDate)) {
+            alert("To Date must be after From Date!");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+{% endblock %}

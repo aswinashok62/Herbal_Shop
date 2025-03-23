@@ -1,0 +1,164 @@
+{% extends 'navigation.html' %}
+{% block body %}
+
+<center>
+    <h2 style="color:rgb(62, 136, 28); margin-top:2%">User View Booking Detail</h2>
+</center>
+<hr>
+
+<div class="container" style="border:1px solid white">
+    <div class="row">
+        <div class="col-md-6" style="height:100px;">
+            <center>
+                <a href="{% url 'view_product' 0 %}" style="margin-top:1%; width:80%; background-color: #FFD700; border-color: #FFD700;" class="btn btn-sm text-dark text-capitalize">
+                    <ion-icon style="margin-right:8px" name="pricetags"></ion-icon>Continue Shopping
+                </a>
+            </center>
+        </div>
+        <div class="col-md-6" style="height:100px;">
+            <center>
+                <a style="margin-top:1%; width:100%; border:1px solid black" class="btn btn-default btn-lg text-dark text-capitalize">
+                    Total: Rs.{{ total.total }}
+                </a>
+            </center>
+        </div>
+    </div>
+</div>
+
+{% for i in product %}
+    {% if i.id in book %}
+        <center>
+            <div class="container" style="margin-top:2%; width:80%">
+                <div class="row" style="height:150px;">
+                    <div class="col-md-4" style="height:120px;">
+                        <img src="{{ i.image.url }}" style="width:30%; height:100px; border:1px solid darkgray; margin-top:5%">
+                    </div>
+                    <div class="col-md-4" style="height:100px;">
+                        <h5 style="margin-top:5%">{{ i.name }}</h5>
+                        <hr>
+                        <h6>Price: Rs.{{ i.price }}</h6>
+                        <p>{{ i.desc }}</p>
+                    </div>
+                    <div class="col-md-4" style="height:100px;">
+                      
+
+                        <h4 style="margin-top:15%; color:rgb(29, 205, 59)">Booked Successfully</h4>
+                        {% if status == "Delivered" and not return_request %}
+                            <button class="btn btn-danger text-light mt-2" onclick="showReturnPopup({{ i.id }})">Return Product</button>
+                        {% endif %}
+                        {% if return_request %}
+                        <div class="card mt-3">
+                            <div class="card-header bg-info text-white">
+                                Return Request Status
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Status: 
+                                    {% if return_request.status == "Pending" %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif return_request.status == "Approved" %}
+                                        <span class="badge bg-success">Approved</span>
+                                    {% elif return_request.status == "Rejected" %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% endif %}
+                                </h5>
+                                <p class="card-text">
+                                    <strong>Reason:</strong> {{ return_request.reason }}<br>
+                                    <strong>Submitted:</strong> {{ return_request.created_at|date:"F d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </center>
+    {% endif %}
+{% endfor %}
+
+<!-- Delivery Status Update (For Staff/Admin) -->
+{% if user.is_authenticated and user.is_staff %} 
+    <form method="POST" action="{% url 'update_delivery_status' booking.id %}">
+        {% csrf_token %}
+        <label for="status">Update Status:</label>
+        <select name="status" class="form-control">
+            <option value="Out for Delivery" {% if booking.status.name == "Out for Delivery" %}selected{% endif %}>Out for Delivery</option>
+            <option value="Delivered" {% if booking.status.name == "Delivered" %}selected{% endif %}>Delivered</option>
+        </select>
+        <button type="submit" class="btn btn-primary mt-2">Update Status</button>
+    </form>
+{% endif %}
+
+<!-- Booking Status Display -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Booking Status: 
+                {% if status == "Out for Delivery" %}
+                    <span class="badge bg-warning text-dark">{{ status }}</span>
+                {% elif status == "Delivered" %}
+                    <span class="badge bg-success">{{ status }}</span>
+                {% elif status == "Returned" %}
+                    <span class="badge bg-purple">{{ status }}</span>
+                {% else %}
+                    <span class="badge bg-danger">Pending</span>
+                {% endif %}
+            </h4>
+            <!-- Invoice Download Link (Only if Delivered) -->
+            {% if status == "Delivered" %}
+                <h6 class="mt-3">
+                    <a href="{% url 'generate_invoice' booking.id %}" class="text-decoration-none text-primary">
+                        <ion-icon name="download-outline"></ion-icon> Download Invoice
+                    </a>
+                </h6>
+            {% endif %}
+<br> </br>
+<br> </br>
+            <h6 class="mt-3">Assigned Delivery Boy: 
+                {% if delivery_boy %}
+                    <span class="text-primary">{{ delivery_boy.firstname }} {{ delivery_boy.lastname }} ({{ delivery_boy.phone }})</span>
+                {% else %}
+                    <span class="text-danger">Not Assigned</span>
+                {% endif %}
+            </h6>
+
+            
+        </div>
+    </div>
+</div>
+
+<!-- Return Popup Modal -->
+<div id="returnModal" class="modal">
+    <div class="modal-content">
+        <h4>Select a reason for return:</h4>
+        <form id="returnForm" action="{% url 'refund_form' %}" method="GET">
+            <input type="hidden" id="product_id" name="product_id">
+            <input type="hidden" name="booking_id" value="{{ booking.id }}">
+            <select name="reason" id="return_reason" class="form-control">
+                <option value="Damaged product">Damaged product</option>
+                <option value="Wrong item received">Wrong item received</option>
+                <option value="Quality issue">Quality issue</option>
+                <option value="Expired product">Expired product</option>
+                <option value="Incorrect quantity">Incorrect quantity</option>
+                <option value="Packaging damaged">Packaging damaged</option>
+                <option value="Delayed delivery">Delayed delivery</option>
+                <option value="Other">Other</option>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-primary">Proceed</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showReturnPopup(productId) {
+        document.getElementById("returnModal").style.display = "block";
+        document.getElementById("product_id").value = productId;
+    }
+    function closeModal() {
+        document.getElementById("returnModal").style.display = "none";
+    }
+</script>
+
+{% endblock %}

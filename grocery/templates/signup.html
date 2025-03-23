@@ -1,0 +1,218 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+.container {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: zoomIn 0.5s ease forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Add animation delay for each form group */
+.form-group:nth-child(1) { animation-delay: 0.2s; }
+.form-group:nth-child(2) { animation-delay: 0.3s; }
+
+.form-control {
+    transition: all 0.3s ease;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    transform: scale(1.02);
+    border-color: #4EA685;
+    box-shadow: 0 0 10px rgba(78, 166, 133, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #4EA685, #57B894);
+    border: none;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards 1s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 166, 133, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Stylish container design */
+.container-fluid {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.container-fluid:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Stylish heading */
+h2 {
+    color: #333;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(45deg, #4EA685, #57B894);
+    border-radius: 3px;
+}
+
+/* Input label styling */
+.form-group label {
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-group:focus-within label {
+    color: #4EA685;
+    transform: translateX(5px);
+}
+
+/* Success message animation */
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert {
+    animation: slideIn 0.5s ease forwards;
+}
+</style>
+
+<div class="container">
+    <h2 style="margin-top:20px" align="center">Registration Form</h2>
+    <hr>
+
+    <div class="container-fluid" style="width:70%;margin-top:5%">
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>First Name</label>
+                    <input type="text" class="form-control" placeholder="Enter First Name" name="fname" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" name="lname" placeholder="Enter Last Name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>User Name</label>
+                    <input type="text" class="form-control" name="uname" placeholder="Enter User Name" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="pwd" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Contact</label>
+                    <input type="text" class="form-control" placeholder="Enter Contact Detail" name="contact" maxlength="10" pattern="[0-9]{10}" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" placeholder="Enter City" name="city" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Date of Birth</label>
+                    <input type="date" class="form-control" name="date" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label>Full Address</label>
+                    <input type="text" class="form-control" placeholder="Enter Address Detail" name="add" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Create Account
+            </button>
+        </form>
+    </div>
+</div>
+
+{% if error %}
+<script>
+    Swal.fire({
+        title: 'Success!',
+        text: 'Registration Successful',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500
+    }).then(() => {
+        window.location = "{% url 'login' %}";
+    });
+</script>
+{% endif %}
+
+<!-- Add SweetAlert2 for better alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}

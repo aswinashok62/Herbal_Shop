@@ -1,0 +1,236 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --primary: #4CAF50;
+        --primary-light: #e8f5e9;
+        --text-dark: #2c3e50;
+        --text-light: #666;
+        --border: #eee;
+        --white: #ffffff;
+    }
+
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .profile-section {
+        background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+        padding: 30px 0;
+        min-height: 100vh;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        background: linear-gradient(to right, var(--primary), #66BB6A);
+        padding: 25px;
+        color: white;
+        text-align: center;
+        position: relative;
+    }
+
+    .profile-avatar {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 15px;
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .profile-email {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .profile-body {
+        padding: 25px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--primary);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .info-card:hover::before {
+        opacity: 1;
+    }
+
+    .info-label {
+        color: var(--text-light);
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-label i {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+
+    .info-value {
+        color: var(--text-dark);
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .edit-profile-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 25px auto 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .edit-profile-btn:hover {
+        background: #388E3C;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            margin: 15px;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .profile-header {
+            padding: 25px 15px;
+        }
+        
+        .profile-body {
+            padding: 15px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>
+
+<div class="profile-section">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if pro.image %}
+                    <img src="{{ pro.image.url }}" alt="Profile Picture">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture">
+                {% endif %}
+            </div>
+            <h1 class="profile-name">{{pro.user.first_name}} {{pro.user.last_name}}</h1>
+            <p class="profile-email">{{pro.user.email}}</p>
+        </div>
+
+        <div class="profile-body">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i>
+                        Contact Number
+                    </div>
+                    <div class="info-value">{{pro.contact}}</div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-calendar"></i>
+                        Date of Birth
+                    </div>
+                    <div class="info-value">{{pro.dob}}</div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-city"></i>
+                        City
+                    </div>
+                    <div class="info-value">{{pro.city}}</div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Address
+                    </div>
+                    <div class="info-value">{{pro.address}}</div>
+                </div>
+            </div>
+
+            <a href="{% url 'edit_profile' %}" class="edit-profile-btn">
+                <i class="fas fa-user-edit"></i>
+                Edit Profile
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

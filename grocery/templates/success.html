@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black; /* Outer background color */
+        }
+        .container {
+            background-color: gray; /* Inner container color */
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px; /* Width for mobile view */
+            height: 650px; /* Adjusted height */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center; /* Center align text */
+        }
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        p {
+            color: white;
+            font-size: 16px;
+        }
+        a {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Successful!</h1>
+        <p>Thank you for registering as a delivery boy. Your information has been successfully submitted.</p>
+        <p>Kindly wait for our contact and Admin Conformation</p>
+        <a href="{% url 'delivery_boy_login' %}">Go to Login</a>
+    </div>
+</body>
+</html>

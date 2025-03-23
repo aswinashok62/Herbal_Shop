@@ -1,0 +1,101 @@
+{% extends 'carousel.html' %}
+{% block b %}
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+    }
+    .btn-custom {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #4EA685;
+        color: white;
+    }
+</style>
+
+<center>
+    <form action="" method="get">
+        <div class="input-group mb-3" style="width:30%">
+            <input type="text" class="form-control" placeholder="Search" name="search" value="{{ request.GET.search }}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </form>
+</center>
+
+{% if not search_pro %}
+    {% for i in cat %}
+    <div class="container-fluid">
+        <h2>{{ i.name }}</h2>
+        <hr>
+        <div class="row">
+            {% for j in pro %}
+                {% if i.name == j.category.name %}
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <center>
+                            <img class="card-img-top img-fluid" src="{{ j.image.url }}" alt="card-img">
+                        </center>
+                        <div class="card-body">
+                            <h4 class="product-title">{{ j.name }} Rs.{{ j.price }}</h4>
+                            <p class="card-text">{{ j.desc }}</p>
+                            <form align="center" action="{% url 'add_cart' j.id %}" method="post" class="add-to-cart-form">
+                                {% csrf_token %}
+                                {% if request.user.is_authenticated %}
+                                    <button type="submit" class="btn btn-custom">Add to Cart</button>
+                                {% else %}
+                                    <button type="button" class="btn btn-custom" onclick="showLoginWarning()">Add to Cart</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Login Warning Modal -->
+<div class="modal fade" id="loginWarningModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login Required</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                You need to log in to add products to your cart.
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLoginWarning() {
+        $('#loginWarningModal').modal('show');
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+{% endblock %}

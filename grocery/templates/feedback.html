@@ -1,0 +1,100 @@
+{% extends 'navigation.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+  body {
+    background: url("{% static 'images/feedback.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
+  .feedback-container {
+    max-width: 500px;
+    margin: 5% auto;
+    padding: 20px;
+    background: green;
+    color: white;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .feedback-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: url("{% static 'images/feedback_leaf.jpg' %}") no-repeat center center; */
+    background-size: cover;
+    opacity: 0.3;
+    z-index: 0;
+  }
+  .feedback-container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+  .feedback-container .form-group {
+    position: relative;
+    z-index: 1;
+  }
+  .feedback-container input,
+  .feedback-container textarea {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+  }
+  .feedback-container input[readonly] {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .feedback-container .btn-submit {
+    width: 100%;
+    background: yellow;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<div class="feedback-container">
+    <h2>Send Feedback</h2>
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Date 📅</label>
+            <input type="text" class="form-control" name="date" value="{{ date1 }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Username 👤</label>
+            <input type="text" class="form-control" name="uname" value="{{ request.user.username }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Email 📧</label>
+            <input type="email" class="form-control" name="email" value="{{ request.user.email }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Contact 📞</label>
+            <input type="number" class="form-control" name="contact" value="{{ pro.contact }}" readonly>
+        </div>
+        <div class="form-group">
+            <label>Feedback 📝</label>
+            <textarea class="form-control" name="desc" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Submit Feedback</button>
+    </form>
+</div>
+
+{% if error %}
+<script>
+    alert('Feedback sent successfully!');
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,24 @@
+
+
+
+
+{% block content %}
+<h2>Appointment History</h2>
+
+{% if appointments %}
+    <ul>
+        {% for appointment in appointments %}
+        <li>
+            <strong>Doctor:</strong> Dr. {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}<br>
+            <strong>Date:</strong> {{ appointment.date }}<br>
+            <strong>Time:</strong> {{ appointment.time }}<br>
+            <strong>Reason:</strong> {{ appointment.reason }}<br>
+            <strong>Status:</strong> {{ appointment.status }}  <!-- Assuming 'status' is a field in Appointment model -->
+        </li>
+        <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No appointment history to display.</p>
+{% endif %}
+{% endblock %}

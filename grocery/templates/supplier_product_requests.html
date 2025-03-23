@@ -1,0 +1,208 @@
+{% include 'suppliernav.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier - Product Requests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/Supplier_productreq.jpg' %}"); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            margin: 0;
+            padding: 0;
+            color: #333; /* Default text color */
+        }
+
+        .container {
+            max-width: 800px; /* Limit the width of the container */
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9); /* White background with slight transparency */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-top: 50px; /* Space from the top */
+        }
+
+        h2 {
+            text-align: center;
+            color: #28a745; /* Green color for heading */
+            margin-bottom: 20px; /* Space below heading */
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px; /* Rounded corners */
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #f9f9f9; /* Light background for cards */
+            position: relative;
+            transition: box-shadow 0.3s ease; /* Smooth shadow transition */
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        }
+
+        .show-all-btn, .view-all-btn {
+            background-color: #007bff; /* Blue button */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .show-all-btn:hover, .view-all-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #28a745; /* Green button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .download-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #007bff; /* Blue header */
+            color: white;
+            text-align: left; /* Align text to the left */
+        }
+
+        .status-select, .message-input {
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px; /* Rounded edges */
+            border: 1px solid #ccc; /* Light border */
+        }
+
+        .update-btn {
+            margin-top: 20px;
+            background-color: #28a745; /* Green button */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .update-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Product Requests</h2>
+
+    {% regroup product_requests|dictsort:"requested_at" by requested_at|date:"Y-m-d" as grouped_requests %}
+    {% for group in grouped_requests %}
+    <div class="card">
+        <h3>Admin Name: Herbal Shop</h3>
+        <p><strong>Date:</strong> {{ group.grouper }}</p>
+        
+        
+        <a href="{% url 'download_requests_pdf' group.grouper %}" class="btn download-btn">
+            <i class="fas fa-download"></i> Download Requests
+        </a>
+        
+        <!-- View All Requests Button -->
+        <a href="{% url 'all_requests' %}" class="btn">View All Requests</a>
+
+        <div id="requests-{{ group.grouper }}" class="product-requests" style="display:none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th>Update Status</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in group.list %}
+                    <tr>
+                        <td>{{ request.product_name }}</td>
+                        <td>{{ request.category }}</td>
+                        <td>{{ request.quantity }}</td>
+                        <td>{{ request.status }}</td>
+                        <td>{{ request.remarks }}</td>
+                        <td>
+                            <select data-product-id="{{ request.id }}" class="status-select">
+                                <option value="Pending" {% if request.status == "Pending" %}selected{% endif %}>Pending</option>
+                                <option value="Completed" {% if request.status == "Completed" %}selected{% endif %}>Completed</option>
+                                <option value="Canceled" {% if request.status == "Canceled" %}selected{% endif %}>Canceled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Optional message" data-product-id="{{ request.id }}" class="message-input">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% empty %}
+    <p>No product requests found.</p>
+    {% endfor %}
+</div>
+
+
+
+<script>
+    function toggleProductRequests(date, requests) {
+        const requestsDiv = document.getElementById(`requests-${date}`);
+        requestsDiv.style.display = requestsDiv.style.display === "none" ? "block" : "none";
+    }
+
+    function submitUpdates() {
+        const statusSelects = document.querySelectorAll('.status-select');
+        const messageInputs = document.querySelectorAll('.message-input');
+        const updates = [];
+
+        statusSelects.forEach(select => {
+            const productId = select.dataset.productId;
+            const status = select.value;
+            const message = Array.from(messageInputs).find(input => input.dataset.productId == productId).value;
+            updates.push({ id: productId, status: status, message: message });
+        });
+
+        // Simulate sending updates to the server (replace with your actual implementation)
+        console.log('Updates to be sent:', updates);
+        alert('Updates submitted! Check the console for details.');
+    }
+</script>
+
+</body>
+</html>

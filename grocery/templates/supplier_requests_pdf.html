@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Requests PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Product Requests</h2>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Admin Name</th>
+            <th>Status</th>
+            <th>Requested At</th>
+            <th>Remarks</th>
+        </tr>
+        {% for request in product_requests %}
+        <tr>
+            <td>{{ request.product_name }}</td>
+            <td>{{ request.category }}</td>
+            <td>{{ request.quantity }}</td>
+            <td>Herbal Shop</td>
+            <td>{{ request.status }}</td>
+            <td>{{ request.requested_at }}</td>
+            <td>{{ request.remarks|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+  <title>Herbal Shop</title>
+  <link rel="icon" href="images/favicon.ico">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <link rel = stylesheet href = "//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+  </script>
+  <style>
+  * {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th {
+  text-align: left;
+  padding: 12px;
+  background-color: green;
+  color: white;
+}
+
+
+#myTable td {
+  text-align: left;
+  padding: 12px;
+  background-color: white;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+.button {
+  background-color: orange; /* Green */
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 1px 1px;
+  cursor: pointer;
+}
+
+
+.button1 {border-radius: 15px;}
+
+  /* Make the image fully responsive */
+  .carousel-inner img {
+      width: 100%;
+      height: 100%;
+  }
+  </style>
+  
+  
+  <style>
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #476e20; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #4cc043; 
+}
+
+.nav-link:hover{
+  color: lightblue !important;
+  /*font-weight:bold;*/
+  background-color : #43b54f;
+  border-radius:10px
+}
+.nav-link{
+  /*font-weight:bold;*/
+}
+
+.navbar-brand{
+ 
+  text-shadow: 1px 1px lightblue;
+  
+}
+.navbar-brand:hover{
+  color: #288740 !important;
+ 
+  
+}
+</style>
+  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Navbar Styling */
+.navbar {
+    background: linear-gradient(135deg, #1a472a, #2d5a27);
+    padding: 0.8rem 1rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Brand Logo Animation */
+.navbar-brand {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
+}
+
+.brand-text {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.brand-text .herbal {
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.brand-text .shop {
+    font-size: 18px;
+    color: #8bc34a;
+    font-weight: 500;
+}
+
+/* Nav Links Animation */
+.nav-link {
+    position: relative;
+    color: white !important;
+    padding: 0.8rem 1.2rem !important;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #8bc34a;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover {
+    color: #8bc34a !important;
+    background: rgba(139, 195, 74, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::after {
+    width: 70%;
+}
+
+/* Dropdown Styling */
+.dropdown-menu {
+    background: #1a472a;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: dropdownFade 0.3s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    color: white;
+    padding: 0.8rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: #2d5a27;
+    color: #8bc34a;
+    transform: translateX(5px);
+}
+
+/* Cart Button Styling */
+.cart-btn {
+    position: relative;
+    padding: 0.5rem 1rem;
+    background: rgba(139, 195, 74, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.cart-btn:hover {
+    background: rgba(139, 195, 74, 0.3);
+    transform: translateY(-2px);
+}
+
+.cart-icon {
+    color: white;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff5252;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50%;
+    animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* User Profile Styling */
+.user-profile {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    fill: #8bc34a;
+}
+
+.username {
+    color: white;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        background: #1a472a;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem !important;
+    }
+}
+</style>
+</head>
+<body style="background-color:white">
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">
+        <div class="brand-text">
+            <div class="herbal"><span style="color: #8bc34a;">H</span>ERBAL</div>
+            <div class="shop"><span style="color: #8bc34a;">S</span>hop</div>
+        </div>
+    </a>
+   
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <!-- Links -->
+        <ul class="navbar-nav pl-2 text-center">
+            {% if request.user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin_home' %}" style="color:white"><ion-icon style="margin-right:0px" name="home-sharp"></ion-icon>Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'add_blog' %}" style="color:white;">
+                  <ion-icon style="margin-right:0px" name="people"></ion-icon>Blog
+              </a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_view_returns' %}" style="color:white;">
+                <ion-icon style="margin-right:0px" name="people"></ion-icon>View Returns
+            </a>
+        </li>
+
+
+          
+          
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_viewBooking' %}" style="color:white"><ion-icon style="margin-right:0px" name="logo-bitcoin"></ion-icon>Bookings</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'view_feedback' %}" style="color:white"><ion-icon style="margin-right:0px" name="chatbubbles"></ion-icon>ViewFeedback</a>
+        </li>
+
+        </li>
+
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white"><ion-icon style="margin-right:0px" name="albums"></ion-icon>Product</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a>
+            <a class="dropdown-item" href="{% url 'admin_view_product' %}">View Product</a>
+          </div>
+        </li>
+
+
+
+
+
+
+        
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white"><ion-icon style="margin-right:1px" name="newspaper-sharp"></ion-icon>Category</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'add_categary' %}">Add Category</a>
+            <a class="dropdown-item" href="{% url 'view_categary' %}">View Category</a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'verify_delivery_boys' %}" style="color:white;">Delivery Boys</a>
+      </li>
+
+
+          <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white"><ion-icon style="margin-right:1px" name="newspaper-sharp"></ion-icon>Search</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'search_booking' %}">SearchBooking</a> -->
+
+          
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'send_product_request' %}" style="color:white">
+              <ion-icon style="margin-right:0px" name="chatbubbles"></ion-icon>
+              Supplier Request
+          </a>
+      </li>
+
+
+
+
+
+      
+         <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white"><ion-icon style="margin-right:0px" name="newspaper-sharp"></ion-icon>Reports</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'bookingbetweendate_report' %}">Booking B/W Reports</a>
+
+          </div>
+        </li>
+
+
+          {% endif %}
+
+
+          {% if request.user.username %}
+          {% if not request.user.is_staff %}
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}" style="color:white; font-size: 0.8rem; padding: 10px 10px;">
+              <ion-icon style="margin-right:2px" name="home-sharp"></ion-icon>Home
+          </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'view_product' 0 %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="eye"></ion-icon>View Product
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'view_booking' %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="aperture"></ion-icon>View Booking
+        </a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'send_feedback' request.user.id %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="send"></ion-icon>Send Feedback
+        </a>
+      </li>
+
+
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog' %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="send"></ion-icon>Blog
+        </a>
+      </li>
+
+
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="{% url 'view_product' 0 %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="eye"></ion-icon>View Product
+        </a>
+      </li> -->
+
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'change_password' %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right:2px" name="document-text-sharp"></ion-icon>Change Password
+        </a>
+      </li>
+
+
+          <!-- <a href="{% url 'book_appointment' %}" class="btn btn-primary">Book Appointment</a> -->
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'book_appointment' %}" style="color:white; padding: 10px 10px; font-size: 0.8rem;">
+                <ion-icon style="margin-right:2px" name="send"></ion-icon>Book Appointment
+            </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'chatbot' %}" style="color:white"><ion-icon style="margin-right:2px" name="phone-portrait-sharp"></ion-icon>Chatbot</a>
+        </li>
+          
+
+          {% endif %}
+          {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home'  %}" style="color:white"><ion-icon style="margin-right:2px" name="home-sharp"></ion-icon>Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}" style="color:white"><ion-icon style="margin-right:2px" name="briefcase-sharp"></ion-icon>About</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}" style="color:white"><ion-icon style="margin-right:2px" name="phone-portrait-sharp"></ion-icon>Contact</a>
+          </li>
+          {% endif %}
+
+          
+
+
+          {% if request.user.is_authenticated %}
+          <a class="nav-link" href="{% url 'logout' %}" style="color: rgb(255, 255, 255); padding: 10px 10px; font-size: 0.8rem;">
+            <ion-icon style="margin-right: 1px;" name="power-sharp"></ion-icon>Logout
+        </a>
+        
+          {% if not request.user.is_staff %}
+          <li class="nav-item" style="text-align: center;">
+            <a href="{% url 'profile' %}" style="text-decoration: none; color: inherit;">
+              <!-- Custom SVG Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px; fill: #FF0000;" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              <!-- Username -->
+              <h6 style="margin-top: 2px; color: #FF0000; text-transform: capitalize; font-size: 12px;">{{ request.user.username }}</h6>
+            </a>
+          </li>
+          
+
+          {% else %}
+
+          <!--<li class="nav-item">
+            <p  class="nav-link" style="color:#91DE00"><ion-icon style="margin-right:0px;color:#91DE00" name="person-circle-sharp"></ion-icon>Welcome {{request.user.username}}</p>
+          </li>-->
+          {% endif %}
+              {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}" style="color:white;text-align:right"><ion-icon style="margin-right:2px" name="log-in-sharp"></ion-icon>User Login</a>
+          </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login_admin' %}" style="color:white;text-align:right"><ion-icon style="margin-right:2px" name="log-in-sharp"></ion-icon>Admin Login</a>
+            </li>
+            <li class="nav-item">
+                      <a class="nav-link" href="{% url 'delivery_boy_login' %}" style="color:white; text-align:right;">
+                          <ion-icon style="margin-right:2px" name="log-in-sharp"></ion-icon>Delivery Boy Login
+                      </a>
+                  </li>
+                  
+
+          
+          
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'doctor_login' %}"  style="color:white;text-align:right"><ion-icon style="margin-right:2px" name="log-in-sharp"></ion-icon>Doctor Login</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'supplier_login' %}" style="color:white;text-align:right">
+                <ion-icon style="margin-right:2px" name="log-in-sharp"></ion-icon> Supplier Login
+            </a>
+        </li>
+
+
+
+        </ul>
+
+        {% endif %}
+
+        {% if not request.user.is_staff %}
+        {% if request.user.username %}
+        <a href="{% url 'cart' %}" style="position: relative; padding: 5px 10px; font-size: 1.0rem;" class="btn btn-default text-dark text-capitalize">
+        <ion-icon 
+            style="color: rgb(255, 255, 255); font-size: 30px;" 
+            name="cart">
+        </ion-icon>
+        <span 
+            style="
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background-color: red;
+                color: white;
+                font-size: 10px;
+                font-weight: bold;
+                padding: 2px 5px;
+                border-radius: 50%;
+            ">
+            {{num1}}
+        </span>
+    </a>
+
+      <!-- <span style="margin-left: 6px; color: white;">Cart</span> -->
+    
+    
+
+  {% endif %}
+        {% endif %}
+
+        </ul>
+
+    </div>
+
+</nav>
+
+{% block body %}
+
+{% endblock %}
+
+
+
+</body></html>

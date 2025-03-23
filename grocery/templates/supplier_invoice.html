@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .invoice-box { width: 100%; border: 1px solid #ccc; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h2, h3 { text-align: center; }
+        .qr-container { text-align: center; margin-top: 20px; }
+        .qr-container img { width: 200px; height: 200px; }
+        .payment-instruction { text-align: center; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+    <h2>Supplier Invoice</h2>
+    <h3>{{ supplier.company_name }}</h3>
+    <p><strong>Date:</strong> {{ date }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price per Product</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for supply in supplies %}
+            <tr>
+                <td>{{ supply.product_name }}</td>
+                <td>{{ supply.category }}</td>
+                <td>{{ supply.quantity }}</td>
+                <td>{{ supply.price_per_product|floatformat:2 }}</td>
+                <td>{{ supply.total_price|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>Total Amount:</strong> ₹{{ total_amount|floatformat:2 }}</p>
+
+    <div class="qr-container">
+        <img src="{{ qr_code_url }}" alt="QR Code for Payment" width="200" height="200">
+
+    </div>
+
+    <p class="payment-instruction">
+        Pay the amount through the smart QR code and send the payment screenshot/bank receipt via email(<td>{{ supplier.company_name|lower|cut:" " }}@gmail.com</td>)
+
+    </p>
+</div>
+
+</body>
+</html>

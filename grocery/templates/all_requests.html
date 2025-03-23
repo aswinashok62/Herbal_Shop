@@ -1,0 +1,230 @@
+{% include 'suppliernav.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Product Requests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5; /* Light background */
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #28a745; /* Green color for heading */
+            margin-bottom: 20px; /* Space below heading */
+        }
+
+        .table-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 940px; /* Max width for the table */
+            margin: auto;
+            border-radius: 5px;
+            border: 1px solid rgb(21, 94, 117);
+            overflow-y: auto; /* Enable vertical scrolling */
+            scrollbar-gutter: stable; /* Space for scrollbar */
+            background-color: white; /* White background for the table */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: rgb(21, 94, 117); /* Header background */
+            color: white; /* Header text color */
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.05); /* Light background for odd rows */
+        }
+
+        tbody tr:hover {
+            background-color: rgba(240, 253, 244, 0.35); /* Highlight on hover */
+        }
+
+        td {
+            padding: 0.75rem;
+            position: relative;
+            font-weight: 600;
+        }
+
+        td input[type="text"], td input[type="number"], td select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded edges */
+            font-size: 0.9rem;
+        }
+
+        button {
+            background-color: #28a745; /* Green button */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .delete-btn {
+            background-color: transparent; /* Transparent background */
+            color: red; /* Red color for delete button */
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem; /* Larger font for delete icon */
+        }
+
+        .add-row-btn {
+            margin: 20px 0; /* Space above and below */
+            background-color: #007bff; /* Blue button */
+        }
+
+        .add-row-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+
+<h2>All Product Requests</h2>
+
+<form method="post" action="{% url 'submit_all_requests' %}" onsubmit="return validateForm()">
+    {% csrf_token %}
+    
+    {% for date, requests in grouped_requests.items %}
+    <h3>Requests on {{ date }}</h3>
+    <div class="table-wrapper">
+        <table id="productRequestsTable_{{ forloop.counter }}">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Price per Product</th>
+                    <th>Status</th>
+                    <th>Supplier</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td><input type="text" name="product_name[]" value="{{ request.product_name }}" required></td>
+                    <td><input type="text" name="category[]" value="{{ request.category }}" required></td>
+                    <td><input type="number" name="quantity[]" value="{{ request.quantity }}" min="1" required></td>
+                    <td><input type="number" name="price_per_product[]" value="{{ request.price_per_product }}" step="0.01" min="0" required class="price-input"></td>
+                    <td>
+                        <select name="status[]" class="status-select" onchange="updatePriceField(this)">
+                            <option value="Pending" {% if request.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Completed" {% if request.status == "Completed" %}selected{% endif %}>Completed</option>
+                            <option value="Not_Available" {% if request.status == "Not_Available" %}selected{% endif %}>Not Available</option>
+                        </select>
+                    </td>
+                    <td><input type="text" name="supplier[]" value="{{ request.supplier.company_name }}" required readonly></td>
+                    <td>
+                        <button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" class="add-row-btn" onclick="addRow({{ forloop.counter }}, '{{ request.supplier.company_name }}')">➕ Add Row</button>
+        <button type="submit" name="submit_{{ forloop.counter }}">Submit</button>
+    </div>
+    {% endfor %}
+
+</form>
+
+<script>
+function addRow(tableIndex, supplierName) {
+    let table = document.querySelector(`#productRequestsTable_${tableIndex} tbody`);
+    let newRow = table.insertRow();
+    let columns = ["product_name", "category", "quantity", "price_per_product", "status", "supplier"];
+
+    for (let i = 0; i < columns.length; i++) {
+        let newCell = newRow.insertCell(i);
+        if (columns[i] === "status") {
+            newCell.innerHTML = `
+                <select name="status[]" class="status-select" onchange="updatePriceField(this)">
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Not_Available">Not Available</option>
+                </select>`;
+        } else if (columns[i] === "price_per_product") {
+            newCell.innerHTML = '<input type="number" name="price_per_product[]" step="0.01" min="0" required class="price-input">';
+        } else if (columns[i] === "supplier") {
+            newCell.innerHTML = `<input type="text" name="supplier[]" value="${supplierName}" required readonly>`;
+        } else {
+            newCell.innerHTML = '<input type="text" name="' + columns[i] + '[]" required>';
+        }
+    }
+    
+    let actionCell = newRow.insertCell(columns.length);
+    actionCell.innerHTML = '<button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button>';
+}
+
+function deleteRow(button) {
+    let row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+
+function validateForm() {
+    let rows = document.querySelectorAll("table tbody tr");
+    let seen = new Set();
+    for (let row of rows) {
+        let productName = row.querySelector("input[name='product_name[]']").value.trim();
+        let category = row.querySelector("input[name='category[]']").value.trim();
+        let quantity = row.querySelector("input[name='quantity[]']").value.trim();
+        let price = row.querySelector("input[name='price_per_product[]']").value.trim();
+        let status = row.querySelector("select[name='status[]']").value;
+        let supplier = row.querySelector("input[name='supplier[]']").value.trim();
+
+        if (!productName || !category || !quantity || !supplier || (status !== "Not_Available" && !price)) {
+            alert("All fields must be filled.");
+            return false;
+        }
+
+        let uniqueKey = `${productName}-${category}-${quantity}-${price}-${status}-${supplier}`;
+        if (seen.has(uniqueKey)) {
+            alert("Duplicate rows are not allowed.");
+            return false;
+        }
+        seen.add(uniqueKey);
+    }
+    return true;
+}
+
+function updatePriceField(selectElement) {
+    let row = selectElement.closest("tr");
+    let priceInput = row.querySelector(".price-input");
+
+    if (selectElement.value === "Not_Available") {
+        priceInput.value = 0;
+        priceInput.setAttribute("disabled", "true");
+    } else {
+        priceInput.removeAttribute("disabled");
+    }
+}
+</script>
+
+</body>
+</html>

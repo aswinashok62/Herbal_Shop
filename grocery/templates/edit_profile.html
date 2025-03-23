@@ -1,0 +1,81 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+<div class="container">
+    <h2 style="margin-top:20px" align="center">Edit Profile</h2><hr>
+
+    <div class="container-fluid" style="width:70%; margin-top:10%">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" name="fname" value="{{ pro.user.first_name }}" id="firstName">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" name="lname" value="{{ pro.user.last_name }}" id="lastName">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="username">User Name</label>
+                    <input type="text" class="form-control" name="uname" value="{{ pro.user.username }}" id="username" readonly>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" name="email" value="{{ pro.user.email }}" id="email">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="contact">Contact</label>
+                    <input type="text" class="form-control" name="contact" value="{{ pro.contact }}" id="contact">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" name="city" value="{{ pro.city }}" id="city">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control" name="dob" value="{{ pro.dob }}" id="dob">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="address">Full Address</label>
+                    <input type="text" class="form-control" name="add" value="{{ pro.address }}" id="address">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="image">Image</label>
+                    <input type="file" class="form-control" name="img" id="image">
+                </div>
+                <div class="form-group col-md-6">
+                    {% if pro.image %}
+                        <img src="{{ pro.image.url }}" style="width:150px; height:150px">
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" style="width:150px; height:150px">
+                    {% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-bottom:5%">Update</button>
+        </form>
+    </div>
+</div>
+
+{% if error %}
+<div class="alert alert-success" role="alert">
+    Update Successfully!
+</div>
+<script>
+    setTimeout(function(){
+        window.location = "{% url 'profile' %}";
+    }, 2000); // Redirect after 2 seconds
+</script>
+{% endif %}
+
+{% endblock %}

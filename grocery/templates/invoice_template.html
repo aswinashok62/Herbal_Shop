@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background: #f8f8f8;
+        }
+        .invoice-container {
+            max-width: 700px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+        }
+        .invoice-header {
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .invoice-header h2 {
+            font-size: 24px;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .invoice-details p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .invoice-table th {
+            background: #f4f4f4;
+        }
+        .total-section {
+            margin-top: 15px;
+            text-align: right;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .signature img {
+            margin-top: 5px;
+            width: 100px;  /* Adjust size as needed */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h2>INVOICE</h2>
+        </div>
+
+        <div class="invoice-details">
+            <p><strong>Issued To:</strong> {{ profile.user.get_full_name }}</p>
+            <p>Address: {{ profile.address }}</p>
+            <p>Email: {{ profile.user.email }} | Phone: {{ profile.contact }}</p>
+            <p><strong>Invoice No:</strong> {{ booking.booking_id }} | <strong>Date:</strong> {{ booking.book_date }}</p>
+            
+        </div>
+
+        <table class="invoice-table">
+            <tr>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>Rs. {{ product.price }}</td>
+                <td>{{ booking.quantity }}</td>
+                <td>Rs. {{ booking.total }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="total-section">
+            <p>Subtotal: Rs. {{ booking.total }}</p>
+        </div>
+
+        <!-- <div class="signature">
+            <p>Authorized Signature</p>
+            <img src="{% static 'images/signatureherbalShop.png' %}" alt="Signature"> -->
+
+
+        </div>
+    </div>
+</body>
+</html>

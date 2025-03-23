@@ -1,0 +1,198 @@
+{% block body %}
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: black; /* Outer background color */
+        font-family: Arial, sans-serif; /* Consistent font across the page */
+    }
+    .container {
+        background-color: gray; /* Inner container color */
+        border-radius: 15px;
+        padding: 20px;
+        width: 80%; /* Increased width for better layout */
+        width: 350px; /* Width for mobile view */
+        height: 650px; /* Set height to auto for better layout */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        display: flex;
+        flex-direction: column; /* Arrange items in a column */
+        align-items: center; /* Center align items horizontally */
+    }
+    h2 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px; /* Add margin below the heading */
+    }
+    .filter-buttons {
+        display: flex;
+        justify-content: space-between; /* Align buttons evenly */
+        margin-bottom: 20px;
+        width: 100%; /* Full width for buttons */
+    }
+    .filter-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        flex: 1; /* Flex to make buttons equal size */
+        margin: 0 5px; /* Space between buttons */
+        display: flex; /* Enable flexbox */
+        align-items: center; /* Center icon vertically */
+        justify-content: center; /* Center icon horizontally */
+    }
+    .filter-btn:hover {
+        background-color: #218838;
+    }
+    .table-wrapper {
+        overflow-x: auto; /* Allow horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+        width: 100%; /* Full width for table wrapper */
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+    .table th {
+        background-color: #4CAF50;
+        color: white;
+        text-transform: uppercase;
+    }
+    .status-select {
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .update-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 5px; /* Space above the button */
+    }
+    .update-btn:hover {
+        background-color: #0056b3;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        color: white;
+        text-align: center; /* Center align messages */
+    }
+    .icon-container {
+        display: flex; /* Flex container for icons */
+        justify-content: space-around; /* Space between icons */
+        width: 100%; /* Full width for icon container */
+        padding: 10px 0; /* Vertical padding for icon container */
+        margin-top: 260; /* Push to the bottom of the profile container */
+    }
+    .icon {
+        font-size: 20px; /* Adjust icon size here (icon size) */
+        color: white; /* Icon color */
+        cursor: pointer; /* Cursor pointer on hover */
+        aspect-ratio: 1; /* Maintain a square aspect ratio */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center the icon */
+        padding: 5px; /* Adjust padding for touch targets (icon size) */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+    .icon:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+        border-radius: 50%; /* Round the hover background */
+    }
+</style>
+
+<div class="container">
+    <h2>Pending Orders</h2>
+    <hr>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        <a href="{% url 'delivery_boy_dashboard' %}" class="filter-btn">
+            <i class="fas fa-list"></i> All Orders
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.booking_id }}</td>
+                    <td>{{ booking.profile.user.first_name }} {{ booking.profile.user.last_name }}</td>
+                    <td>{{ booking.profile.user.email }}</td>
+                    <td>{{ booking.profile.address }}</td>
+                    <td>{{ booking.profile.contact }}</td>
+                    
+                    <td>Rs.{{ booking.total }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'update_delivery_status' booking.id %}">
+                            {% csrf_token %}
+                            <select name="status" class="status-select">
+                                <option value="Out for Delivery" {% if booking.status.name == "Out for Delivery" %}selected{% endif %}>Out for Delivery</option>
+                                <option value="Delivered" {% if booking.status.name == "Delivered" %}selected{% endif %}>Delivered</option>
+                            </select>
+                            <button type="submit" class="update-btn">
+                                <i class="fas fa-sync"></i> Update
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="text-align:center;">No Pending Orders</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="icon-container">
+            <div class="icon" onclick="window.history.back()">
+                <span class="icon">&#8592;</span> <!-- Left arrow -->
+            </div>
+            <div class="icon" onclick="window.location.href='{% url 'delivery_boy_dashboard' %}'">
+                <span class="icon">&#9776;</span> <!-- Menu icon -->
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        function toggleMenu() {
+            // Implement menu toggle functionality here
+            alert('Menu button clicked!'); // Placeholder action for menu button
+        }
+    </script>
+    </div>
+</div>
+
+{% endblock %}

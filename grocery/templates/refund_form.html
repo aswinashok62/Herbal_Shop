@@ -1,0 +1,131 @@
+{% extends 'navigation.html' %}
+{% block body %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Return Request Form</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'return_product' product.id %}" onsubmit="return validateForm()">
+                        {% csrf_token %}
+
+                        <!-- Hidden field for booking ID -->
+                        {% if booking_id %}
+                        <input type="hidden" name="booking_id" value="{{ booking_id }}">
+                        {% endif %}
+
+                        <div class="form-group mb-3">
+                            <label for="reason"><strong>Return Reason:</strong></label>
+                            <input type="text" class="form-control" id="reason" name="reason" value="{{ reason }}" readonly>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="account_name"><strong>Account Holder Name:</strong></label>
+                            <input type="text" class="form-control" id="account_name" name="account_name" required pattern="[A-Za-z\s]+" title="Only alphabets allowed">
+                            <small class="text-danger d-none" id="nameError">Only letters and spaces are allowed.</small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="account_number"><strong>Account Number:</strong></label>
+                            <div class="d-flex align-items-center">
+                                <input type="text" class="form-control me-2" id="account_number" name="account_number" required pattern="\d{12}" title="Account number must be 12 digits">
+                                <small class="text-muted">123456789012 (12 numbers)</small>
+                            </div>
+                            <small class="text-danger d-none" id="accError">Account number must be exactly 12 digits.</small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="bank_name"><strong>Bank Name:</strong></label>
+                            <input type="text" class="form-control" id="bank_name" name="bank_name" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ifsc_code"><strong>IFSC Code:</strong></label>
+                            <input type="text" class="form-control" id="ifsc_code" name="ifsc_code" required pattern="^[A-Z]{4}0[A-Z0-9]{6}$" title="Invalid IFSC code format">
+                            <small class="text-danger d-none" id="ifscError">Invalid IFSC Code format (Example: ABCD0123456).</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <p><i class="fa fa-info-circle"></i> Please note:</p>
+                            <ul>
+                                <li>Refund will be processed within 5-7 business days after approval</li>
+                                <li>Make sure your bank details are correct</li>
+                                <li>You will be notified via email about the status of your return request</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-success">Submit Return Request</button>
+                            <a href="{% url 'view_booking' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("account_name").addEventListener("input", function() {
+        let nameField = this.value;
+        let nameError = document.getElementById("nameError");
+        if (!/^[A-Za-z\s]+$/.test(nameField)) {
+            nameError.classList.remove("d-none");
+        } else {
+            nameError.classList.add("d-none");
+        }
+    });
+
+    document.getElementById("account_number").addEventListener("input", function() {
+        let accField = this.value;
+        let accError = document.getElementById("accError");
+        if (!/^\d{12}$/.test(accField)) {
+            accError.classList.remove("d-none");
+        } else {
+            accError.classList.add("d-none");
+        }
+    });
+
+    document.getElementById("ifsc_code").addEventListener("input", function() {
+        let ifscField = this.value;
+        let ifscError = document.getElementById("ifscError");
+        let ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+        if (!ifscRegex.test(ifscField)) {
+            ifscError.classList.remove("d-none");
+        } else {
+            ifscError.classList.add("d-none");
+        }
+    });
+
+    function validateForm() {
+        let accNum = document.getElementById("account_number").value;
+        let ifsc = document.getElementById("ifsc_code").value;
+        let name = document.getElementById("account_name").value;
+
+        // Check Account Number Length
+        if (accNum.length !== 12 || isNaN(accNum)) {
+            document.getElementById("accError").classList.remove("d-none");
+            return false;
+        }
+
+        // Check IFSC Code Format
+        let ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+        if (!ifscRegex.test(ifsc)) {
+            document.getElementById("ifscError").classList.remove("d-none");
+            return false;
+        }
+
+        // Check Account Name Format
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            document.getElementById("nameError").classList.remove("d-none");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+{% endblock %}

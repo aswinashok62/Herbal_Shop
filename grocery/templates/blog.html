@@ -1,0 +1,154 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f7fc;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+        .blog-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two blogs per row */
+            gap: 20px;
+            padding: 20px;
+        }
+        .blog-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease-in-out;
+            text-align: center;
+            height: 100%;
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+        .blog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+        }
+        .blog-meta {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .blog-card img {
+            width: 90%;
+            height: auto;
+            border-radius: 8px;
+            max-height: 250px;
+        }
+        .read-more {
+            margin-top: 15px;
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .read-more:hover {
+            background-color: #0056b3;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 650px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: red;
+        }
+        @media (max-width: 768px) {
+            .blog-container {
+                grid-template-columns: 1fr; /* One blog per row on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">📖 Blog Page</h2>
+        <p class="text-center">Explore the latest blogs and insights!</p>
+        
+        <div class="blog-container">
+            {% if blogs %}
+                {% for blog in blogs %}
+                <div class="blog-card">
+                    {% if blog.image %}
+                        <img src="{{ blog.image.url }}" class="img-fluid" alt="Blog Image">
+                    {% endif %}
+                    <div class="blog-title">{{ blog.title }}</div>
+                    <p class="blog-meta">By {{ blog.author.username }} | {{ blog.created_at }}</p>
+                    <button class="read-more" onclick="openPopup('{{ blog.id }}')">Read More</button>
+                    
+                    <!-- Popup Modal -->
+                    <div id="popup-{{ blog.id }}" class="popup">
+                        <div class="popup-content">
+                            <button class="close-btn" onclick="closePopup('{{ blog.id }}')">&times;</button>
+                            <h3>{{ blog.title }}</h3>
+                            <p class="blog-meta">By {{ blog.author.username }} | {{ blog.created_at }}</p>
+                            <p>{{ blog.content }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center">No blogs available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+    <script>
+        function openPopup(id) {
+            document.getElementById('popup-' + id).style.display = 'flex';
+        }
+        function closePopup(id) {
+            document.getElementById('popup-' + id).style.display = 'none';
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}

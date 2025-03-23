@@ -1,0 +1,83 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+
+
+
+<div class="container">
+    <h2 style="margin-top:20px" align="center">Search Booking</h2><hr>
+
+<div class="container-fluid" style="width:70%;margin-top:10%">
+<form method="post" action="">
+    {% csrf_token %}
+  <div class="form-group">
+    <label for="exampleInputEmail1">Search By Booking Number</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="searchdata" placeholder="Enter Booking Number">
+  </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+
+</div>
+</div>
+
+<hr>
+
+<div class="container">
+
+{% if terror == "found" %}
+    <h4 align="center">Result against booking number "{{ sd }}" </h4>
+    <br>
+
+    <table class="table table-bordered" id="myTable">
+  <thead>
+  <tr>
+
+    <th>Booking ID</th>
+    <th>Booking Date</th>
+    <th>Customer name</th>
+    <th>Email Id</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Status</th>
+    <th>View Product</th>
+    <th>Cancel Booking</th>
+  </tr>
+  </thead>
+   <tbody>
+
+
+
+  <tr>
+
+    <td>{{book.booking_id}}</td>
+    <td>{{book.book_date}}</td>
+    <td>{{book.profile.user.username}}</td>
+    <td>{{book.profile.user.email}}</td>
+      <td>{{book.quantity}}</td>
+      <td>{{book.total}}</td>
+    <td><a href="{% url 'Edit_status' book.booking_id book.id %}"><button class="button button1">{{book.status.name}}</button></a></td>
+      <td><a href="{% url 'admin_booking_detail' book.booking_id book.id book.profile.user.id  %}"><button class="button button1">detail</button></a></td>
+      <td><a href="{% url 'delete_admin_booking' book.booking_id book.id %}" onclick="return confirm('Are you sure?')"><button class="button button1" id="#delete">cancel</button></a></td>
+  </tr>
+
+{% endif %}
+
+
+    </tbody>
+</table>
+
+     {% if terror == "notfound" %}
+
+                                      <p class="text-center"> No record found against this search</p>
+
+
+
+   {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+<div class="container">
+    <h2 style="margin-top:20px" align="center">Add Product</h2><hr>
+
+    <div class="container-fluid" style="width:70%; margin-top:10%">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Product Selection Dropdown (Filtered by Completed Status) -->
+            <div class="form-group">
+                <label for="productSelect">Select Completed Supply</label>
+                <select id="productSelect" class="form-control">
+                    <option value="">-- Select a Product --</option>
+                    {% for supply in completed_supplies %}
+                        <option value="{{ supply.id }}" 
+                                data-name="{{ supply.product_name }}"
+                                data-price="{{ supply.price_per_product|floatformat:0 }}" 
+                                data-category="{{ supply.category }}"
+                                data-stock="{{ supply.quantity }}"
+                                data-date="{{ supply.requested_at|date:'Y-m-d' }}"
+                                data-expiry="{{ supply.expiry_date|date:'Y-m-d' }}">
+                            {{ supply.product_name }} ({{ supply.category }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Product Name</label>
+                    <input type="text" class="form-control" name="pname" id="productName" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Product Image</label>
+                    <input type="file" class="form-control" name="img" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Category</label>
+                    <select id="productCategory" class="form-control" name="cat" required>
+                        {% for category in categories %}
+                            <option value="{{ category.name }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Product Price</label>
+                    <input type="number" class="form-control" name="price" id="productPrice" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Stock</label>
+                    <input type="number" class="form-control" name="stock" id="productStock" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Date</label>
+                    <input type="date" class="form-control" name="date" id="productDate" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Expiry Date</label>
+                    <input type="date" class="form-control" name="expiry_date" id="expiryDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" name="desc" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript to autofill fields -->
+<script>
+    document.getElementById("productSelect").addEventListener("change", function() {
+        let selectedOption = this.options[this.selectedIndex];
+
+        let selectedPrice = parseFloat(selectedOption.getAttribute("data-price")) || 0;
+        let selectedStock = parseInt(selectedOption.getAttribute("data-stock")) || 0;
+
+        document.getElementById("productName").value = selectedOption.getAttribute("data-name") || "";
+        document.getElementById("productPrice").value = selectedPrice;
+        document.getElementById("productCategory").value = selectedOption.getAttribute("data-category") || "";
+        document.getElementById("productStock").value = selectedStock;
+        document.getElementById("productDate").value = selectedOption.getAttribute("data-date") || "";
+        document.getElementById("expiryDate").value = selectedOption.getAttribute("data-expiry") || "";
+
+        // Store the original values for validation
+        document.getElementById("productPrice").setAttribute("data-original-price", selectedPrice);
+        document.getElementById("productStock").setAttribute("data-original-stock", selectedStock);
+    });
+
+    document.getElementById("productPrice").addEventListener("blur", function() {
+        let originalPrice = parseFloat(this.getAttribute("data-original-price")) || 0;
+        let currentPrice = parseFloat(this.value) || 0;
+
+        if (currentPrice < originalPrice) {
+            alert("⚠️ Warning: You cannot decrease the price!");
+            this.value = originalPrice; // Reset to original price
+        }
+    });
+
+    document.getElementById("productStock").addEventListener("blur", function() {
+        let originalStock = parseInt(this.getAttribute("data-original-stock")) || 0;
+        let currentStock = parseInt(this.value) || 0;
+
+        if (currentStock > originalStock) {
+            setTimeout(() => {
+                alert("⚠️ Warning: You are adding more stock than available!");
+            }, 100); // Small delay to ensure smooth flow
+        }
+    });
+</script>
+
+
+
+
+{% endblock %}

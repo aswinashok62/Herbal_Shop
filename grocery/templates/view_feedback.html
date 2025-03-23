@@ -1,0 +1,83 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% if error %}
+<script>
+    alert('1 Product Deleted Successfully');
+    window.location("{% url 'view_feedback' %}");
+</script>
+{% endif %}
+
+<style>
+    /* Style the table headings */
+    .table th {
+        background-color: white; /* White background */
+        color: black; /* Black text */
+        padding: 12px; /* Add padding for better spacing */
+        text-align: left; /* Align text to the left */
+    }
+    /* Style the table */
+    .table {
+        width: 100%;
+        border-collapse: collapse; /* Remove spacing between cells */
+    }
+    .table td {
+        padding: 12px; /* Add padding for better spacing */
+        border: 1px solid #ddd; /* Add borders to table cells */
+    }
+    /* Style the delete button */
+    .button1 {
+        background-color: red; /* Red background */
+        color: white; /* White text */
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .button1:hover {
+        background-color: darkred; /* Darker red on hover */
+    }
+    /* Style the heading */
+    h2 {
+        color: white; /* White text for the heading */
+        margin-top: 2%;
+    }
+</style>
+
+<center><h2>View Feedback</h2></center><hr>
+<div class="container" style="margin-top:5%">
+    <table class="table table-bordered" id="myTable">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Contact Number</th>
+                <th>Email Id</th>
+                <th>Date</th>
+                <th>Message</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in feed %}
+            <tr>
+                <td>{{i.profile.user.username}}</td>
+                <td>{{i.profile.contact}}</td>
+                <td>{{i.profile.user.email}}</td>
+                <td>{{i.date}}</td>
+                <td>{{i.message1}}</td>
+                <td><a href="{% url 'delete_feedback' i.id %}" onclick="return confirm('Are you sure?')"><button class="button button1">Delete</button></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var el_up = document.getElementById("GFG_UP");
+    el_up.innerHTML = "Click on the LINK for further confirmation.";
+</script>
+
+{% endblock %}

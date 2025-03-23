@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Boy Registration</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background-color: black; /* Outer background color */
+            color: white; /* Text color */
+            font-family: Arial, sans-serif; /* Font family */
+        }
+        .container {
+            background-color: gray; /* Inner container color */
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px; /* Width for mobile view */
+            height: 650px; /* Limit height to viewport */
+            overflow-y: auto; /* Scroll if content overflows */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column; /* Arrange items in a column */
+            align-items: center; /* Center align items horizontally */
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px; /* Add margin below the heading */
+        }
+        label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+            text-align: left; /* Left align labels */
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px; /* Space below inputs */
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%; /* Full width for button */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: #28a745; /* Link color */
+            text-decoration: none; /* Remove underline from links */
+        }
+        a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Delivery Boy Registration</h1>
+        <form action="{% url 'delivery_boy_register' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="firstname">First Name:</label>
+            <input type="text" id="firstname" name="firstname" required>
+            
+            <label for="lastname">Last Name:</label>
+            <input type="text" id="lastname" name="lastname" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required>
+            
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required>
+            
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district" required>
+            
+            <label for="place">Place:</label>
+            <input type="text" id="place" name="place" required>
+            
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+            
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" required>
+            
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            
+            <label for="idproof">Upload ID Proof:</label>
+            <input type="file" id="idproof" name="idproof" accept=".pdf,image/*" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'delivery_boy_login' %}">Login here</a>.</p>
+        <a href="{% url 'home' %}" class="logout-link">Go Home</a>
+    </div>
+</body>
+</html>

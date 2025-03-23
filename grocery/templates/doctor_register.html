@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Registration</title>
+    <style>
+        /* New Navigation Bar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #4CAF50; /* Herbal Green */
+            padding: 10px 20px; /* Increased padding for better spacing */
+            color: white;
+            font-size: 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px; /* Increased height for a more prominent navbar */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            margin-left: auto; /* Pushes the login button to the right */
+        }
+
+        .navbar ul li {
+            margin: 0 15px; /* Increased spacing */
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px; /* Slightly larger text */
+            padding: 8px 12px; /* More compact button */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Light hover effect */
+        }
+
+        /* Push body content down to prevent overlap */
+        body {
+            margin: 0;
+            padding-top: 70px; /* Adjusted for larger navbar */
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9; /* Light background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 70px); /* Full height minus navbar */
+        }
+
+        /* Form container styling */
+        form {
+            background-color: #ffffff;
+            padding: 2rem; /* Increased padding */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Slightly wider form */
+        }
+
+        /* Heading styling */
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 24px; /* Larger heading */
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Input field styling */
+        input[type="text"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="file"]:focus {
+            border-color: #4CAF50; /* Herbal Green */
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Button styling */
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #4CAF50; /* Herbal Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #388E3C; /* Darker green on hover */
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            padding: 0.5rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            form {
+                padding: 1.5rem; /* Adjust padding for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">Herbal Shop - Doctor Registration</div>
+        <ul>
+            <li><a href="{% url 'doctor_login' %}">Login</a></li> <!-- Show only the Login button -->
+        </ul>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Registration</h2> <!-- Registration heading -->
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" required>
+
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" required>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" required>
+
+        <label for="specialization">Specialization:</label>
+        <input type="text" name="specialization" required>
+
+        <label for="image">Profile Image:</label>
+        <input type="file" name="image" accept="image/*">
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

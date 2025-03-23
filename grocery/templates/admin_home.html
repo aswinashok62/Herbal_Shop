@@ -1,0 +1,136 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from { text-shadow: 0 0 10px #fff, 0 0 20px #e60073; }
+  to { text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6; }
+}
+
+hr.rounded {
+  border-top: 8px solid lightblue;
+  border-radius: 5px;
+}
+
+.prjdiv:hover {
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  transform: translateY(-10px);
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chart-box {
+  width: 45%;
+  height: 400px;
+}
+</style>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" crossorigin="anonymous">
+
+<center>
+<div class="container" style="margin-top:5%;width:80%">
+    <div class="row">
+        <div class="col-md-4 prjdiv">
+            <a href="{% url 'view_user' %}">
+                <h3>Total Customer</h3>
+                <h2 style="color:blue">{{ total_customer }}</h2>
+                <hr class="rounded">
+            </a>
+        </div>
+        <div class="col-md-4 prjdiv">
+            <a href="{% url 'admin_viewBooking' %}">
+                <h3>Total Booking</h3>
+                <h2 style="color:blue">{{ total_book }}</h2>
+                <hr class="rounded">
+            </a>
+        </div>
+        <div class="col-md-4 prjdiv">
+            <a href="{% url 'admin_view_product' %}">
+                <h3>Total Product</h3>
+                <h2 style="color:blue">{{ total_pro }}</h2>
+                <hr class="rounded">
+            </a>
+        </div>
+    </div>
+</div>
+</center>
+
+<h2 class="text-center mt-5">Sales Data</h2>
+
+<!-- Charts -->
+<div class="container chart-container">
+  <div class="chart-box">
+      <h4>Monthly Sales</h4>
+      <canvas id="monthlySalesChart"></canvas>
+  </div>
+  <div class="chart-box">
+      <h4>Daily Sales</h4>
+      <canvas id="dailySalesChart"></canvas>
+  </div>
+  <div class="chart-box">
+      <h4>Monthly Profits</h4>
+      <canvas id="monthlyProfitsChart"></canvas>
+  </div>
+  <div class="chart-box">
+      <h4>Daily Profits</h4>
+      <canvas id="dailyProfitsChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const monthlySalesData = JSON.parse('{{ monthly_sales|escapejs }}');
+const dailySalesData = JSON.parse('{{ daily_sales|escapejs }}');
+const monthlyProfitsData = JSON.parse('{{ monthly_profits|escapejs }}');
+const dailyProfitsData = JSON.parse('{{ daily_profits|escapejs }}');
+
+const monthlyLabels = monthlySalesData.map(item => item.month);
+const monthlyValues = monthlySalesData.map(item => item.total_sales);
+const dailyLabels = dailySalesData.map(item => item.day);
+const dailyValues = dailySalesData.map(item => item.total_sales);
+const monthlyProfitLabels = monthlyProfitsData.map(item => item.month);
+const monthlyProfitValues = monthlyProfitsData.map(item => item.total_profit);
+const dailyProfitLabels = dailyProfitsData.map(item => item.day);
+const dailyProfitValues = dailyProfitsData.map(item => item.total_profit);
+
+new Chart(document.getElementById('monthlySalesChart'), {
+    type: 'line',
+    data: { labels: monthlyLabels, datasets: [{ label: 'Monthly Sales', data: monthlyValues, borderColor: 'blue', backgroundColor: 'rgba(0, 0, 255, 0.1)', borderWidth: 2, fill: true }] },
+    options: { responsive: true, scales: { x: { title: { display: true, text: "Month" } }, y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('dailySalesChart'), {
+    type: 'line',
+    data: { labels: dailyLabels, datasets: [{ label: 'Daily Sales', data: dailyValues, borderColor: 'red', backgroundColor: 'rgba(255, 0, 0, 0.1)', borderWidth: 2, fill: true }] },
+    options: { responsive: true, scales: { x: { title: { display: true, text: "Date" } }, y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('monthlyProfitsChart'), {
+    type: 'bar',
+    data: { labels: monthlyProfitLabels, datasets: [{ label: 'Monthly Profit', data: monthlyProfitValues, backgroundColor: 'green', borderColor: 'darkgreen', borderWidth: 2 }] },
+    options: { responsive: true, scales: { x: { title: { display: true, text: "Month" } }, y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('dailyProfitsChart'), {
+    type: 'bar',
+    data: { labels: dailyProfitLabels, datasets: [{ label: 'Daily Profit', data: dailyProfitValues, backgroundColor: 'purple', borderColor: 'darkpurple', borderWidth: 2 }] },
+    options: { responsive: true, scales: { x: { title: { display: true, text: "Day" } }, y: { beginAtZero: true } } }
+});
+</script>
+
+{% endblock %}

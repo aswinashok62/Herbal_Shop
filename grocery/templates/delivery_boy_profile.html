@@ -1,0 +1,102 @@
+{% block body %}
+{% load static %}
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Stack elements vertically */
+        height: 100vh; /* Full viewport height */
+        background-color: black; /* Outer background color */
+    }
+    .profile-container {
+        background: gray; /* Inner container color */
+        border-radius: 15px;
+        padding: 20px;
+        width: 350px; /* Width for mobile view */
+        height: 650px; /* Limit height to viewport */
+        overflow-y: auto; /* Scroll if content overflows */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        text-align: center;
+        margin-bottom: 20px; /* Space below the container */
+    }
+    .profile-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+        margin-bottom: 10px;
+    }
+    .profile-container h2 {
+        color: white; /* Change text color to white for consistency */
+        margin-bottom: 10px; /* Add margin below the heading */
+    }
+    .profile-container p {
+        font-size: 16px;
+        color: white; /* Change text color to white for consistency */
+        margin: 5px 0; /* Add margin above and below paragraphs */
+    }
+    a {
+        color: #007bff; /* Link color */
+        text-decoration: none; /* Remove underline from links */
+    }
+    a:hover {
+        text-decoration: underline; /* Add underline on hover */
+    }
+    .icon-container {
+        display: flex; /* Flex container for icons */
+        justify-content: space-around; /* Space between icons */
+        width: 100%; /* Full width for icon container */
+        padding: 10px 0; /* Vertical padding for icon container */
+        margin-top: 220; /* Push to the bottom of the profile container */
+    }
+    .icon {
+        font-size: 20px; /* Adjust icon size here (icon size) */
+        color: white; /* Icon color */
+        cursor: pointer; /* Cursor pointer on hover */
+        aspect-ratio: 1; /* Maintain a square aspect ratio */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center the icon */
+        padding: 5px; /* Adjust padding for touch targets (icon size) */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+    .icon:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+        border-radius: 50%; /* Round the hover background */
+    }
+</style>
+
+<div class="profile-container">
+    <img src="{{ delivery_boy.image.url }}" alt="Profile Picture">
+    <h2>{{ delivery_boy.firstname }} {{ delivery_boy.lastname }}</h2>
+    <p><strong>Email:</strong> {{ delivery_boy.email }}</p>
+    <p><strong>Phone:</strong> {{ delivery_boy.phone }}</p>
+    <p><strong>State:</strong> {{ delivery_boy.state }}</p>
+    <p><strong>District:</strong> {{ delivery_boy.district }}</p>
+    <p><strong>Place:</strong> {{ delivery_boy.place }}</p>
+    <p><strong>Location:</strong> {{ delivery_boy.location }}</p>
+    <p><strong>Pincode:</strong> {{ delivery_boy.pincode }}</p>
+    <p><strong>ID Proof:</strong> <a href="{{ delivery_boy.idproof.url }}" target="_blank">View ID Proof</a></p>
+
+    <div class="icon-container">
+        <div class="icon" onclick="window.history.back()">
+            <span class="icon">&#8592;</span> <!-- Left arrow -->
+        </div>
+        <div class="icon" onclick="window.location.href='{% url 'delivery_boy_dashboard' %}'">
+            <span class="icon">&#9776;</span> <!-- Menu icon -->
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        // Implement menu toggle functionality here
+        alert('Menu button clicked!'); // Placeholder action for menu button
+    }
+</script>
+
+{% endblock %}

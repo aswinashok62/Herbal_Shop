@@ -1,0 +1,101 @@
+<!-- appointments.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expert Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #4CAF50;
+        }
+
+        .form-container {
+            margin-top: 20px;
+        }
+
+        input[type="date"], input[type="time"] {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav_doctor.html' %}
+
+    <h1>Welcome, Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>Pending Appointments</h2>
+            <p>{{ pending_appointments }} Pending</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Appointments</h2>
+            <p>{{ total_appointments }} Total</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Add Available Time Slot</h2>
+        <form method="POST" action="{% url 'add_available_time_slot' %}">
+            {% csrf_token %}
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" name="date" required>
+            
+            <label for="time">Select Time:</label>
+            <input type="time" id="time" name="time" required>
+
+            <button type="submit">Add Time Slot</button>
+        </form>
+    </div>
+</body>
+</html>

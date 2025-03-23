@@ -1,0 +1,63 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/Supplier_Dashboard.jpg' %}"); /* Background image */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            margin: 0;
+            padding: 0;
+            color: #333; /* Default text color */
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 70px; /* Space for the fixed navbar */
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Optional: Add a white background with transparency */
+            border-radius: 10px; /* Optional: Rounded corners */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Optional: Subtle shadow */
+        }
+
+        h1 {
+            color: #28a745; /* Green color for heading */
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            background-color: #28a745; /* Green button */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to the Supplier Dashboard</h1>
+    <p>You have successfully logged in.</p>
+
+    <div class="btn-container">
+        <a class="nav-link" href="{% url 'supplier_product_requests' %}">
+            <ion-icon name="list" style="margin-right: 5px;"></ion-icon> View Product Requests
+        </a> 
+    </div>
+</div>
+
+</body>
+</html>

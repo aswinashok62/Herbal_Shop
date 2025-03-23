@@ -1,0 +1,198 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Send Product Request</title>
+    <style>
+        /* Set background */
+        body {
+            background-color: #e8f5e9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        /* Form container */
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: 40px auto; /* Increased margin to move it down */
+        }
+
+        h2, h3 {
+            color: #1b5e20;
+        }
+
+        /* Form elements */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #2e7d32;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #c8e6c9;
+            border-radius: 5px;
+            background: #f1f8e9;
+        }
+
+        button {
+            background-color: #2e7d32;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Table Styling */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #c8e6c9;
+            text-align: center;
+        }
+
+        th {
+            background-color: #388e3c;
+            color: white;
+        }
+
+        /* Group headers */
+        h4 {
+            margin-top: 30px;
+            color: #2e7d32;
+        }
+
+        /* View Supplies button */
+        .view-button {
+            display: inline-block;
+            margin-top: 20px; /* Space above the button */
+            text-decoration: none;
+            padding: 10px 15px;
+            background: #43a047;
+            color: white;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .view-button:hover {
+            background: #1b5e20;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Product Request Form</h2>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" required placeholder="Enter product name">
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="" disabled selected>Select a category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% empty %}
+                    <option disabled>No categories available</option>
+                {% endfor %}
+            </select>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required min="1" placeholder="Enter quantity">
+
+            <label for="supplier">Select Supplier:</label>
+            <select id="supplier" name="supplier" required>
+                <option value="" disabled selected>Select a supplier</option>
+                {% for supplier in suppliers %}
+                    <option value="{{ supplier.id }}">{{ supplier.company_name }}</option>
+                {% empty %}
+                    <option disabled>No suppliers available</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Send Request</button>
+        </form>
+    </div>
+
+    <a href="{% url 'supply_details' %}" class="view-button">View Supplies</a>
+    <br></br>
+
+    <h3>All Sent Requests</h3>
+
+    {% if requests %}
+        {% regroup requests by requested_at.date as request_groups %}
+        {% for group in request_groups %}
+            <h4>Requests for {{ group.grouper }}</h4>
+            {% regroup group.list by supplier.company_name as supplier_groups %}
+            {% for supplier_group in supplier_groups %}
+                <h4>Supplier: {{ supplier_group.grouper }}</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Admin</th>
+                            <th>Status</th>
+                            <th>Sent Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in supplier_group.list %}
+                        <tr>
+                            <td>{{ request.product_name }}</td>
+                            <td>{{ request.category.name }}</td>  
+                            <td>{{ request.quantity }}</td>
+                            <td>{{ request.admin_user.username }}</td>
+                            <td>{{ request.status }}</td>  
+                            <td>{{ request.requested_at.date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p>No product requests sent.</p>
+    {% endif %}
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% include 'nav_doctor.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            
+        </ul>
+    </nav>
+
+    <h2>Profile Details</h2>
+    <div>
+        <img src="{{ doctor.image.url }}" alt="Profile Image" style="width: 150px; height: 150px;">
+        <p><strong>Name:</strong> Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</p>
+        <p><strong>Username:</strong> {{ doctor.user.username }}</p>
+        <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+        <p><strong>Email:</strong> {{ doctor.user.email }}</p>
+    </div>
+</body>
+</html>

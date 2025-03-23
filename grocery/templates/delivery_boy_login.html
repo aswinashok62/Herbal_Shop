@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Boy Login</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black; /* Outer background color */
+        }
+        .container {
+            background-color: gray; /* Inner container color */
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px; /* Width for mobile view */
+            height: 650px; /* Increased height for better layout */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column; /* Arrange items in a column */
+            align-items: center; /* Center align items horizontally */
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px; /* Add margin below the heading */
+        }
+        label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+            text-align: center; /* Center align labels */
+        }
+        input {
+            width: 100%;
+            max-width: 300px; /* Set max width for inputs */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            max-width: 300px; /* Set max width for buttons */
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: white;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            color: white;
+            text-align: center; /* Center align messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Delivery Boy Login</h1>
+        
+        
+        
+        <form action="{% url 'delivery_boy_login' %}" method="post">
+            {% csrf_token %}
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="{% url 'delivery_boy_register' %}">Register here</a>
+        <br>
+        <br>
+        <a href="{% url 'home' %}" class="logout-link">Home</a>
+    </div>
+    
+
+    <script>
+        // You can add any JavaScript here if needed
+    </script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!-- view_product.html -->
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+
+<style>
+/* Modern Sidebar Styling */
+#sidebar-wrapper {
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.sidebar-heading {
+    padding: 1.2rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    background: #f8f9fa;
+    border-bottom: 2px solid #4EA685;
+}
+
+.list-group-item {
+    border: none;
+    padding: 1rem 1.5rem;
+    color: #555;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.list-group-item:hover {
+    background: #4EA685 !important;
+    color: white;
+    transform: translateX(5px);
+}
+
+/* Product Card Styling */
+.product-card {
+    border: none;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    padding: 1rem;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.product-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-details {
+    padding: 1.5rem;
+}
+
+.product-title {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.product-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.product-price {
+    color: #4EA685;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Button Styling */
+.btn-custom {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-view {
+    background: #4EA685;
+    color: white;
+    border: none;
+}
+
+.btn-view:hover {
+    background: #3d8168;
+    transform: translateY(-2px);
+}
+
+.btn-cart {
+    background: white;
+    color: #4EA685;
+    border: 2px solid #4EA685;
+}
+
+.btn-cart:hover {
+    background: #4EA685;
+    color: white;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #4EA685;
+    color: white;
+    border: none;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+    padding: 1rem 2rem;
+}
+
+/* Product Grid - 3 items per row */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Stock Badge */
+.stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.in-stock {
+    background: #4EA685;
+    color: white;
+}
+
+.out-stock {
+    background: #ff5252;
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.product-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 10px;
+    }
+}
+
+/* Product Card size adjustments */
+.product-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-image {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.product-image img {
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.product-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Container adjustment */
+.container-fluid {
+    padding: 0 30px;
+}
+
+/* Row wrapper for better alignment */
+.products-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+</style>
+
+  <div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <div class="sidebar-heading">Categories</div>
+      <div class="list-group list-group-flush">
+            <a href="{% url 'view_product' 0 %}" class="list-group-item">
+                All Products
+            </a>
+        {% for i in cat %}
+            <a href="{% url 'view_product' i.id %}" class="list-group-item">
+                {{i.name}}
+            </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        
+      
+      <div class="container-fluid">
+            <div class="products-wrapper">
+                <h2 class="mb-4">{{cat1.name|default:"All Products"}}</h2>
+                
+                <div class="product-grid">
+                    {% if pro1 %}
+            {% for j in pro1 %}
+                        <div class="product-card">
+                            {% if j.stock > 0 %}
+                            <span class="stock-badge in-stock">In Stock</span>
+                            {% else %}
+                            <span class="stock-badge out-stock">Out of Stock</span>
+                            {% endif %}
+                            
+                            <div class="product-image">
+                                <img src="{{j.image.url}}" alt="{{j.name}}">
+                            </div>
+                            
+                            <div class="product-details">
+                                <h3 class="product-title">{{j.name}}</h3>
+                                <p class="product-description">{{j.desc|truncatechars:100}}</p>
+                                <p class="product-price">₹{{j.price}}</p>
+                                
+                  <div class="d-flex justify-content-between">
+                                    <button class="btn btn-custom btn-view" data-toggle="modal" data-target="#productModal{{j.id}}">
+                      View Details
+                    </button>
+
+                    {% if j.stock > 0 %}
+                    <form action="{% url 'add_cart' j.id %}" method="post">
+                      {% csrf_token %}
+                                        <button type="submit" class="btn btn-custom btn-cart">
+                                            Add to Cart
+                                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+
+                        <!-- Product Modal -->
+                        <div class="modal fade" id="productModal{{j.id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                                        <h5 class="modal-title">{{j.name}}</h5>
+                                        <button type="button" class="close text-white" data-dismiss="modal">
+                                            <span>&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                                        <img src="{{j.image.url}}" class="img-fluid mb-3" alt="{{j.name}}">
+                                        <p>{{j.desc}}</p>
+                                        <p class="product-price">₹{{j.price}}</p>
+                                        <div class="details-grid">
+                                            <p><strong>Category:</strong> {{j.category.name}}</p>
+                                            <p><strong>Stock:</strong> {{j.stock}} units</p>
+                                            <p><strong>Date:</strong> {{j.date|date:"M d, Y"}}</p>
+                                            <p><strong>Expires:</strong> {{j.expiry_date|date:"M d, Y"}}</p>
+                                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    {% if j.stock > 0 %}
+                    <form action="{% url 'add_cart' j.id %}" method="post">
+                      {% csrf_token %}
+                                            <button type="submit" class="btn btn-custom btn-cart">
+                                                Add to Cart
+                                            </button>
+                    </form>
+                    {% endif %}
+                                        <button type="button" class="btn btn-custom btn-view" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+                    {% else %}
+                        <div class="text-center w-100">
+                            <h3>No products available in this category</h3>
+  </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+});
+
+// Add smooth scrolling
+$(document).ready(function(){
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    }
+});
+</script>
+
+{% endblock %}

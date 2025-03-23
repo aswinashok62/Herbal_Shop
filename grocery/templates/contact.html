@@ -1,0 +1,103 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+<style>
+    .container {
+      margin-top: 50px;
+      font-family: 'Arial', sans-serif;
+      color: #006400; /* Green color */
+      text-align: center;
+    }
+  
+    h2 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #006400; /* Green color */
+      margin-bottom: 30px;
+    }
+  
+    .contact-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  
+    .contact-card {
+      flex: 1 1 calc(25% - 20px);
+      max-width: 280px;
+      text-align: center;
+      padding: 20px;
+      border: 2px solid #006400; /* Green border */
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .contact-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+    }
+  
+    .contact-card i {
+      font-size: 32px;
+      color: #006400; /* Green color */
+      margin-bottom: 15px;
+    }
+  
+    .contact-card h4 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #006400;
+    }
+  
+    .contact-card p {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+  
+    .contact-card p.green-text {
+      color: #006400;
+    }
+  </style>
+  
+  <div class="container">
+    
+    <h2><i class="fas fa-wifi"></i> Contact Us</h2>
+
+  
+    <div class="contact-section">
+      <div class="contact-card">
+        <i class="fas fa-phone"></i>
+        <h4>Phone</h4>
+        <p class="green-text">+91 9632588710</p>
+      </div>
+  
+      <div class="contact-card">
+        <i class="fas fa-envelope"></i>
+        <h4>Email</h4>
+        <p class="green-text">aswin@gmail.com</p>
+      </div>
+  
+      <div class="contact-card">
+        <i class="fas fa-map-marker-alt"></i>
+        <h4>Address</h4>
+        <p class="green-text">KK Idukki</p>
+      </div>
+  
+      <div class="contact-card">
+        <i class="far fa-clock"></i>
+        <h4>Office Hours</h4>
+        <p class="green-text">10:00 AM to 7:00 PM</p>
+      </div>
+  
+      
+  
+
+{% endblock %}

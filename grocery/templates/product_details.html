@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card" style="border: 2px solid green; background-color: #e9f5e9;">
+        <div class="card-body">
+            <h2 class="card-title" style="color: green;">{{ product.name }}</h2>
+            <center>
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" style="width: 300px; height: 300px; border-radius: 10px;">
+            </center>
+            <p class="card-text mt-4" style="color: green;"><strong>Price:</strong> Rs.{{ product.price }}</p>
+            <p class="card-text" style="color: green;"><strong>Description:</strong> {{ product.desc }}</p>
+            <p class="card-text" style="color: green;"><strong>Category:</strong> {{ product.category.name }}</p>
+            <a href="{% url 'add_cart' product.id %}" class="btn btn-success" style="background-color: green; border-color: green;">Add to Cart</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

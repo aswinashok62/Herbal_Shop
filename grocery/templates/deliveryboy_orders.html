@@ -1,0 +1,39 @@
+<h2>My Assigned Deliveries</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Customer Name</th>
+            <th>Delivery Address</th>
+            <th>Contact</th>
+            <th>Order Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.booking_id }}</td>
+            <td>{{ booking.customer_name }}</td>
+            <td>{{ booking.delivery_address }}</td>
+            <td>{{ booking.customer_contact }}</td>
+            <td>{{ booking.status }}</td>
+            <td>
+                {% if booking.status != "Delivered" %}
+                    <form action="{% url 'mark_as_delivered' booking.booking_id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Mark as Delivered</button>
+                    </form>
+                {% else %}
+                    <span>Delivered</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No deliveries assigned.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

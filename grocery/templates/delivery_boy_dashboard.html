@@ -1,0 +1,87 @@
+{% block body %}
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: black; /* Outer background color */
+    }
+    .container {
+        background-color: gray; /* Inner container color */
+        border-radius: 15px;
+        padding: 20px;
+        width: 350px; /* Width for mobile view */
+        height: 650px; /* Set height to auto for better layout */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        display: flex;
+        flex-direction: column; /* Arrange items in a column */
+        align-items: center; /* Center align items horizontally */
+    }
+    h2 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px; /* Add margin below the heading */
+    }
+    .filter-buttons {
+        display: flex;
+        flex-direction: column; /* Arrange buttons vertically */
+        gap: 15px; /* Space between buttons */
+        width: 100%; /* Full width for buttons */
+    }
+    .filter-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 20px; /* Increased padding for bigger cards */
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center; /* Center text inside buttons */
+        font-size: 18px; /* Increase font size for better readability */
+        transition: background-color 0.3s; /* Smooth background color transition */
+    }
+    .filter-btn:hover {
+        background-color: #218838;
+    }
+    .message {
+        color: white;
+        text-align: center; /* Center align messages */
+        margin-top: 20px; /* Space above the message */
+    }
+    .logout-link {
+        margin-top: auto; /* Push logout link to the bottom */
+        color: white;
+        text-decoration: none;
+        font-size: 16px; /* Font size for the logout link */
+        transition: color 0.3s; /* Smooth color transition */
+    }
+    .logout-link:hover {
+        color: #ff4d4d; /* Change color on hover */
+    }
+</style>
+
+<div class="container">
+    <h2>Delivery Boy Dashboard</h2>
+    <hr>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        <a href="{% url 'delivery_boy_pending' %}" class="filter-btn">Pending Orders</a>
+        <a href="{% url 'delivery_history' %}" class="filter-btn">Delivery History</a>
+        <a href="{% url 'delivery_boy_profile' %}" class="filter-btn">Profile</a>
+    </div>
+
+    <!-- Placeholder for Content -->
+    <div class="message">
+        <p>Welcome to the Delivery Boy Dashboard!</p>
+        <p>Please select an option above to view details.</p>
+    </div>
+
+    <!-- Logout Link -->
+    <a href="{% url 'home' %}" class="logout-link">Logout</a>
+</div>
+
+{% endblock %}

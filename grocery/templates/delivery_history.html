@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery History</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background-color: black; /* Outer background color */
+        }
+        .container {
+            background-color: gray; /* Inner container color */
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px; /* Width for mobile view */
+            height: 650px; /* Auto height based on content */
+            max-height: 90vh; /* Limit height to viewport */
+            overflow-y: auto; /* Scroll if content overflows */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column; /* Arrange items in a column */
+            align-items: center; /* Center align items horizontally */
+        }
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px; /* Add margin below the heading */
+        }
+        hr {
+            width: 100%;
+            border: 1px solid white; /* Styling for horizontal line */
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Allow horizontal scrolling */
+        }
+        .table {
+            width: 100%;
+            max-width: 600px; /* Set maximum width for the table */
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px; /* Space below table */
+        }
+        .table th, .table td {
+            padding: 10px; /* Reduced padding */
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .table th {
+            background-color: #28a745;
+            color: white;
+            text-transform: uppercase;
+        }
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .filter-btn:hover {
+            background-color: #0056b3;
+        }
+        label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+            text-align: center; /* Center align labels */
+        }
+        a {
+            color: white;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            color: white;
+            text-align: center; /* Center align messages */
+        }
+        .icon-container {
+        display: flex; /* Flex container for icons */
+        justify-content: space-around; /* Space between icons */
+        width: 100%; /* Full width for icon container */
+        padding: 10px 0; /* Vertical padding for icon container */
+        margin-top: 100; /* Push to the bottom of the profile container */
+    }
+    .icon {
+        font-size: 20px; /* Adjust icon size here (icon size) */
+        color: white; /* Icon color */
+        cursor: pointer; /* Cursor pointer on hover */
+        aspect-ratio: 1; /* Maintain a square aspect ratio */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Center the icon */
+        padding: 5px; /* Adjust padding for touch targets (icon size) */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+    .icon:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+        border-radius: 50%; /* Round the hover background */
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Delivery History</h2>
+        <hr>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <a href="{% url 'delivery_boy_dashboard' %}" class="filter-btn">All Orders</a>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Customer Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Total</th>
+                        
+                        <th>Status Updated On</th>  <!-- New column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.booking_id }}</td>
+                        <td>{{ booking.profile.user.first_name }} {{ booking.profile.user.last_name }}</td>
+                        <td>{{ booking.profile.user.email }}</td>
+                        <td>{{ booking.profile.address }}</td>
+                        <td>{{ booking.profile.contact }}</td>
+                        <td>Rs.{{ booking.total }}</td>
+                       
+                        <td>{{ booking.status_updated_at|date:"d M Y, H:i A" }}</td>  <!-- Show status update time -->
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align:center;">No Completed Deliveries</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="icon-container">
+            <div class="icon" onclick="window.history.back()">
+                <span class="icon">&#8592;</span> <!-- Left arrow -->
+            </div>
+            <div class="icon" onclick="window.location.href='{% url 'delivery_boy_dashboard' %}'">
+                <span class="icon">&#9776;</span> <!-- Menu icon -->
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        function toggleMenu() {
+            // Implement menu toggle functionality here
+            alert('Menu button clicked!'); // Placeholder action for menu button
+        }
+    </script>
+</body>
+</html>

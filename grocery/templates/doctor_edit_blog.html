@@ -1,0 +1,25 @@
+{% extends 'nav_doctor.html' %}
+{% block body %}
+
+<div class="container mt-5">
+    <h2 class="text-center">✏️ Edit Blog Post</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title" class="form-label">📝 Title:</label>
+        <input type="text" id="title" name="title" class="form-control" value="{{ blog.title }}" required>
+
+        <label for="content" class="form-label">📄 Content:</label>
+        <textarea id="content" name="content" class="form-control" rows="5" required>{{ blog.content }}</textarea>
+
+        <label for="image" class="form-label">🖼️ Change Image (optional):</label>
+        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+
+        <button type="submit" class="btn btn-success mt-3">💾 Save Changes</button>
+    </form>
+
+    <a href="{% url 'doctor_add_blog' %}" class="btn btn-secondary mt-3">🔙 Back</a>
+</div>
+
+{% endblock %}

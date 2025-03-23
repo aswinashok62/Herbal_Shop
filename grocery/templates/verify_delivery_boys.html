@@ -1,0 +1,102 @@
+{% extends 'navigation.html' %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            background-color: #f4f7fc; /* Light background for better contrast */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center; /* Center the cards */
+            padding: 20px;
+        }
+        .card {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s; /* Add transition for hover effect */
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+        }
+        .card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px; /* Space below the image */
+        }
+        .approve-btn, .details-btn {
+            background-color: #28a745; /* Green for approve button */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            transition: background 0.3s; /* Transition for hover effect */
+        }
+        .approve-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .details-btn {
+            background-color: #007bff; /* Blue for details button */
+        }
+        .details-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .approved {
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Delivery Boys Verification</h1></center>
+    
+    <div class="container">
+        {% for delivery_boy in delivery_boys %}
+            <div class="card">
+                <img src="{{ delivery_boy.image.url }}" alt="Profile Picture">
+                <h3>{{ delivery_boy.firstname }} {{ delivery_boy.lastname }}</h3>
+                <p><strong>Email:</strong> {{ delivery_boy.email }}</p>
+                <p><strong>Phone:</strong> {{ delivery_boy.phone }}</p>
+                <p><strong>Location:</strong> {{ delivery_boy.location }}, {{ delivery_boy.district }}</p>
+
+                <a href="{% url 'delivery_boy_details' delivery_boy.id %}">
+                    <button class="details-btn">View Details</button>
+                </a>
+
+                {% if delivery_boy.is_approved %}
+                    <button class="approve-btn approved" disabled>Approved</button>
+                {% else %}
+                    <form action="{% url 'approve_delivery_boy' delivery_boy.id %}" method="post" onsubmit="return confirmApproval();">
+                        {% csrf_token %}
+                        <button type="submit" class="approve-btn">Approve</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No delivery boys registered yet.</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        function confirmApproval() {
+            return confirm("Are you sure you want to approve this delivery boy?");
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

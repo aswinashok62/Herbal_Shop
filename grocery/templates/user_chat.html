@@ -1,0 +1,182 @@
+{% extends 'navigation.html' %}
+{% block body %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat With Expert</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
+        .container { width: 50%; margin: auto; padding: 20px; }
+        .chat-section { background: #d4edda; padding: 20px; border-radius: 10px; }
+        .chat-title { text-align: center; font-size: 22px; font-weight: bold; color: gray; margin-bottom: 15px; }
+        .chat-box { max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f9f9f9; border-radius: 8px; }
+        .message { padding: 10px; margin: 5px 0; border-radius: 5px; max-width: 60%; clear: both; display: flex; flex-direction: column; position: relative; }
+        .sent { background-color: #dcf8c6; text-align: right; margin-left: auto; align-items: flex-end; }
+        .received { background-color: #f1f1f1; text-align: left; margin-right: auto; align-items: flex-start; }
+        .sender { font-size: 14px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .text-content { font-size: 16px; color: #000; word-wrap: break-word; }
+        .file-attachment a { color: #007bff; text-decoration: none; }
+        .reply-box { font-size: 14px; color: #555; padding: 5px; border-left: 3px solid #007bff; margin-bottom: 5px; background: #eef5ff; border-radius: 5px; position: relative; }
+        .reply-box .close-reply { position: absolute; right: 5px; top: 5px; font-size: 16px; cursor: pointer; color: red; background: none; border: none; }
+        textarea, input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-top: 10px; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; margin-top: 5px; }
+        .reply-button { font-size: 12px; background: none; border: none; color: #007bff; cursor: pointer; padding: 5px; position: absolute; bottom: 5px; right: 5px; }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            position: relative;
+            width: 40%;
+            max-width: 400px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal.zoomed .modal-content {
+            transform: scale(2);
+            cursor: zoom-out;
+        }
+        .close-modal {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+    </style>
+    <script>
+        function setReply(messageId, sender, text) {
+            document.getElementById('replyMessageId').value = messageId;
+            document.getElementById('replyText').innerHTML = `
+                <div class="reply-box">
+                    ↪ <strong>${sender}:</strong> ${text}
+                    <button class="close-reply" onclick="removeReply()">×</button>
+                </div>`;
+        }
+
+        function removeReply() {
+            document.getElementById('replyMessageId').value = "";
+            document.getElementById('replyText').innerHTML = "";
+        }
+
+        function showImage(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove("zoomed");
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function toggleZoom(event) {
+            const modal = document.getElementById('imageModal');
+            if (!modal.classList.contains("zoomed")) {
+                modal.classList.add("zoomed");
+            } else {
+                modal.classList.remove("zoomed");
+            }
+            event.stopPropagation();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-section">
+            <div class="chat-title">User Chat</div>
+            <div class="chat-box">
+                {% for message in messages %}
+                    <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
+                        {% if message.reply_to %}
+                            <div class="reply-box">
+                                ↪ <strong>{{ message.reply_to.sender.username }}:</strong> {{ message.reply_to.message }}
+                            </div>
+                        {% endif %}
+                        
+                        <span class="sender">{% if message.sender == user %}You{% else %}{{ message.sender.username }}{% endif %}</span>
+                        <span class="text-content">{{ message.message }}</span>
+
+                        <!-- Handling Image & File Attachments -->
+                        {% if message.file %}
+                            {% if message.file.url|lower|slice:"-4:" == ".png" or message.file.url|lower|slice:"-4:" == ".jpg" or message.file.url|lower|slice:"-5:" == ".jpeg" or message.file.url|lower|slice:"-4:" == ".gif" %}
+                                <div class="file-attachment">
+                                    <img src="{{ message.file.url }}" alt="Uploaded Image" style="max-width: 100%; border-radius: 5px; cursor: pointer;" onclick="showImage('{{ message.file.url }}')">
+                                </div>
+                            {% else %}
+                                <div class="file-attachment">
+                                    <a href="{{ message.file.url }}" target="_blank" download>📎 Download Attachment</a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        <button class="reply-button" onclick="setReply('{{ message.id }}', '{{ message.sender.username }}', '{{ message.message }}')">↪</button>
+                    </div>
+                {% empty %}
+                    <p>No messages yet. Start chatting!</p>
+                {% endfor %}
+            </div>
+
+            <form method="POST" action="{% url 'send_message' appointment.id %}" enctype="multipart/form-data" onsubmit="scrollToBottom()">
+                <script>
+                    function scrollToBottom() {
+                        setTimeout(function() {
+                            var chatBox = document.querySelector(".chat-box");
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }, 100); // Delay ensures it happens after the message is sent
+                    }
+                
+                    window.onload = function() {
+                        scrollToBottom(); // Scroll to the bottom on page load
+                    };
+                </script>
+                
+                {% csrf_token %}
+                <div id="replyText"></div>
+                <input type="hidden" name="reply_to" id="replyMessageId">
+                <textarea name="message" placeholder="Type your message here..."></textarea>
+                <div class="file-input">
+                    <label for="file-upload" class="custom-file-upload">
+                        📎 Attach File : <span id="file-name">No file chosen</span>
+                    </label>
+                    <input type="file" name="file" id="file-upload" style="display: none;">
+                    
+                    <script>
+                        document.getElementById('file-upload').addEventListener('change', function() {
+                            var fileName = this.files.length > 0 ? this.files[0].name : "No file chosen";
+                            document.getElementById('file-name').textContent = fileName;
+                        });
+                    </script>
+                    
+                    
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="toggleZoom(event)">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <img id="modalImage" src="" alt="Preview">
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

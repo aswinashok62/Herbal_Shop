@@ -1,0 +1,56 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+
+<center><h2>View User Detail</h2></center>
+<div class="container-fluid">
+    <center>
+        <div class="container">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <th style="background-color: white; color: green;">Image</th>
+                        <th style="background-color: white; color: green;">First Name</th>
+                        <th style="background-color: white; color: green;">Last Name</th>
+                        <th style="background-color: white; color: green;">Contact</th>
+                        <th style="background-color: white; color: green;">City</th>
+                        <th style="background-color: white; color: green;">Email Id</th>
+                        <th style="background-color: white; color: green;">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in user %}
+                    <tr>
+                        <td>
+                            {% if i.image %}
+                                <img src="{{ i.image.url }}" width="100" height="90">
+                            {% else %}
+                                <img src="{% static 'images/default-user.png' %}" width="100" height="90">
+                            {% endif %}
+                        </td>
+                        <td>{{ i.user.first_name }}</td>
+                        <td>{{ i.user.last_name }}</td>
+                        <td>{{ i.contact }}</td>
+                        <td>{{ i.city }}</td>
+                        <td>{{ i.user.email }}</td>
+                        <td>
+                            <a href="{% url 'delete_user' i.user.id %}" onclick="return confirm('Are you sure?')">
+                                <button>Delete</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </center>
+</div>
+
+<script>
+    var el_up = document.getElementById("GFG_UP");
+    if (el_up) {
+        el_up.innerHTML = "Click on the LINK for further confirmation.";
+    }
+</script>
+
+{% endblock %}

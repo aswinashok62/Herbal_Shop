@@ -1,0 +1,87 @@
+{% extends 'navigation.html' %}
+
+{% block body %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 10px;
+    }
+    .container {
+        max-width: 450px; /* Reduce container width */
+        margin: 40px auto; /* Move container downwards */
+        background: white;
+        padding: 18px; /* Reduce padding */
+        border-radius: 8px;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #007bff;
+        margin-bottom: 12px; /* Reduce margin */
+        font-size: 20px; /* Slightly smaller font */
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* Reduce space between fields */
+    }
+    input, textarea {
+        width: 100%;
+        padding: 7px; /* Reduce padding */
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+    textarea {
+        height: 150px; /* Make content textarea bigger */
+        resize: vertical;
+    }
+    button {
+        background-color: #28a745;
+        color: white;
+        padding: 9px; /* Reduce padding */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 8px; /* Reduce margin */
+        font-size: 14px;
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container">
+    <h2>✏️ Edit Blog Post</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title">📝 Title:</label>
+        <input type="text" id="title" name="title" value="{{ blog.title }}" required>
+
+        <label for="content">📄 Content:</label>
+        <textarea id="content" name="content" required>{{ blog.content }}</textarea>
+
+        <label for="image">🖼️ Change Image (optional):</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <button type="submit">💾 Save Changes</button>
+    </form>
+
+    <a href="{% url 'add_blog' %}" class="back-link">🔙 Back to Blog List</a>
+</div>
+
+{% endblock %}

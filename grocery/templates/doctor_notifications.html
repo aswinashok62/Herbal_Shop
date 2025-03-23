@@ -1,0 +1,118 @@
+{% include 'nav_doctor.html' %}
+{% block body %}
+{% load static %}
+
+<style>
+    body {
+        background: url("{% static 'images/appointment_bg.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        color: #28a745;
+    }
+
+    .card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+    }
+
+    .timestamp {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    select, button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+
+    button {
+        background: #007bff;
+        color: white;
+        border: none;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .messages {
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+</style>
+
+<div class="container">
+    <h1>Welcome, Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h1>
+
+    <!-- Flash Messages -->
+    
+
+    <h2>🔔 Notifications</h2>
+    <h3>📅 Your Appointments</h3>
+    {% if appointments %}
+        <ul>
+            {% for appointment in appointments %}
+                <li class="card">
+                    <p><strong>Patient:</strong> {{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}</p>
+                    <p><strong>Date:</strong> 📆 {{ appointment.date }}</p>
+                    <p><strong>Time:</strong> ⏰ {{ appointment.time }}</p>
+                    <p><strong>Reason:</strong> 🏥 {{ appointment.reason }}</p>
+                    <p><strong>Status:</strong> {{ appointment.status }}</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+                        <label for="status">Update Status:</label>
+                        <select name="status" required>
+                            <option value="Pending" {% if appointment.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Accepted" {% if appointment.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                            <option value="Cancelled" {% if appointment.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit">Update Status</button>
+                    </form>
+
+                    {% if appointment.status == 'Accepted' %}
+                    <a href="{% url 'chat' appointment.id %}">Chat with Patient</a>
+
+
+                           
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No appointments assigned to you.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

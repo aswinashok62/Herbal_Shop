@@ -1,0 +1,328 @@
+{% extends 'navigation.html' %}
+{% block body %}
+
+<style>
+.cart-header {
+    text-align: center;
+    padding: 30px 0;
+    color: #4EA685;
+    font-weight: 600;
+    font-size: 2rem;
+    position: relative;
+}
+
+.cart-header::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, #4EA685, #8bc34a);
+    border-radius: 2px;
+}
+
+.cart-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.cart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.cart-image {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    padding: 15px;
+}
+
+.cart-image img {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.cart-card:hover .cart-image img {
+    transform: scale(1.05);
+}
+
+.cart-details {
+    padding: 20px;
+}
+
+.product-name {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.product-description {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.price-tag {
+    color: #4EA685;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.quantity-controls {
+    background: #f8f9fa;
+    border-radius: 25px;
+    padding: 5px;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.quantity-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-decrease {
+    background: #ff5252;
+    color: white;
+}
+
+.btn-increase {
+    background: #4EA685;
+    color: white;
+}
+
+.btn-increase:disabled {
+    background: #ccc;
+}
+
+.quantity {
+    padding: 0 20px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.stock-warning {
+    color: #ff5252;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.remove-btn {
+    background: #ff5252;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+    background: #ff3333;
+    transform: translateY(-2px);
+}
+
+.cart-footer {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.action-btn {
+    background: linear-gradient(45deg, #4EA685, #8bc34a);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 166, 133, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.total-price {
+    background: #f8f9fa;
+    padding: 15px 25px;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.empty-cart h1 {
+    color: #ff5252;
+    margin-bottom: 20px;
+}
+
+/* Enhanced Shaking and Bouncing Animation for Checkout Button */
+@keyframes shakeAndBounce {
+    0% { 
+        transform: translateX(0) translateY(0); 
+    }
+    15% { 
+        transform: translateX(-5px) translateY(-3px); 
+    }
+    30% { 
+        transform: translateX(5px) translateY(3px); 
+    }
+    45% { 
+        transform: translateX(-5px) translateY(-3px); 
+    }
+    60% { 
+        transform: translateX(5px) translateY(3px); 
+    }
+    75% { 
+        transform: translateX(-5px) translateY(0); 
+    }
+    90% { 
+        transform: translateX(5px) translateY(-3px); 
+    }
+    100% { 
+        transform: translateX(0) translateY(0); 
+    }
+}
+
+.checkout-btn {
+    animation: shakeAndBounce 2s ease-in-out infinite;
+    background: linear-gradient(45deg, #4EA685, #8bc34a);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.checkout-btn:hover {
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 166, 133, 0.3);
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, #8bc34a, #4EA685);
+}
+
+.checkout-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(78, 166, 133, 0.3);
+}
+</style>
+
+<div class="cart-header">
+    <h2>Shopping Cart</h2>
+</div>
+
+{% if not cart %}
+<div class="empty-cart">
+    <h1>{{ message }}</h1>
+    <a href="{% url 'view_product' 0 %}" class="action-btn">
+        <i class="fas fa-shopping-bag mr-2"></i>Start Shopping
+    </a>
+</div>
+{% else %}
+<div class="container">
+    {% for item in cart %}
+    <div class="cart-card">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <div class="cart-image">
+                    <img src="{{ item.product.image.url|default:'/static/images/placeholder.png' }}" 
+                         alt="{{ item.product.name }}">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="cart-details">
+                    <h5 class="product-name">{{ item.product.name }}</h5>
+                    <p class="product-description">{{ item.product.desc }}</p>
+                    <p class="price-tag">
+                       Rs.{{ item.total_price|floatformat:2 }}
+                    </p>
+                    
+                    <div class="quantity-controls">
+                        <a href="{% url 'decrease_quantity' item.id %}" class="quantity-btn btn-decrease">-</a>
+                        <span class="quantity">{{ item.quantity }}</span>
+                        {% if item.quantity < item.product.stock %}
+                        <a href="{% url 'increase_quantity' item.id %}" class="quantity-btn btn-increase">+</a>
+                        {% else %}
+                        <button class="quantity-btn btn-increase" disabled>+</button>
+                        {% endif %}
+                    </div>
+
+                    {% if item.quantity >= item.product.stock %}
+                    <p class="stock-warning">Only {{ item.product.stock }} left in stock!</p>
+                    {% endif %}
+
+                    <a href="{% url 'remove_cart' item.id %}" class="remove-btn">
+                        <i class="fas fa-trash-alt mr-2"></i>Remove
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="cart-footer">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <a href="{% url 'view_product' 0 %}" class="action-btn">
+                    <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'booking_order' book %}" class="checkout-btn">
+                    <i class="fas fa-credit-card mr-2"></i>Checkout
+                </a>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="total-price">
+                    Total: Rs.{{ total|floatformat:2 }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+{% endblock %}

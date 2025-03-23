@@ -1,0 +1,109 @@
+{% extends 'navigation.html' %}
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center text-primary">Return Requests</h2>
+    <hr>
+
+    {% if return_requests %}
+        <table class="table table-bordered table-striped">
+            <thead class="thead-light" style="background-color: #28a745; color: white;">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Product</th>
+                    <th>Booking ID</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Date Requested</th>
+                    <th>Account Holder</th>
+                    <th>Account Number</th>
+                    <th>Bank Name</th>
+                    <th>IFSC Code</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in return_requests %}
+                    <tr>
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.user.username }}</td>
+                        <td>{{ request.product.name }}</td>
+                        <td>
+                            {% if request.booking %}
+                                <span class="badge badge-info">{{ request.booking.id }}</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Not linked</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ request.reason }}</td>
+                        <td>
+                            {% if request.status == "Pending" %}
+                                <span class="badge badge-warning">{{ request.status }}</span>
+                            {% elif request.status == "Approved" %}
+                                <span class="badge badge-success">{{ request.status }}</span>
+                            {% elif request.status == "Rejected" %}
+                                <span class="badge badge-danger">{{ request.status }}</span>
+                            {% else %}
+                                {{ request.status }}
+                            {% endif %}
+                        </td>
+                        <td>{{ request.created_at|date:"d M Y, h:i a" }}</td>
+                        <td>{{ request.account_name }}</td>
+                        <td>{{ request.account_number }}</td>
+                        <td>{{ request.bank_name }}</td>
+                        <td>{{ request.ifsc_code }}</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="request_id" value="{{ request.id }}">
+                                <select name="status" class="form-control">
+                                    <option value="Pending" {% if request.status == "Pending" %}selected{% endif %}>Pending</option>
+                                    <option value="Approved" {% if request.status == "Approved" %}selected{% endif %}>Approved</option>
+                                    <option value="Rejected" {% if request.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                                </select>
+                                <button type="submit" class="btn btn-success btn-sm mt-2">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            <h4 class="text-center">No return requests found</h4>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    /* Additional styling for the table */
+    table {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    th, td {
+        text-align: center; /* Center align text */
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,382 @@
+{% extends 'navigation.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+body {
+    background: linear-gradient(110deg, #e8f5e9 60%, #4CAF50 60%);
+    font-family: Arial, sans-serif; /* Ensure consistent font */
+}
+
+.container-fluid {
+    padding: 2rem; /* Add padding for better alignment */
+}
+
+.shop {
+    font-size: 10px;
+}
+
+.space {
+    letter-spacing: 0.8px !important;
+}
+
+.card {
+    border: none !important;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    border-radius: 16px; /* Rounded corners for the card */
+}
+
+.breadcrumb {
+    padding: 0px;
+    font-size: 10px;
+    background-color: transparent;
+}
+
+.breadcrumb-item a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-control-sm {
+    height: calc(2.2em + .5rem + 2px);
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    border: 1.5px solid #e0e0e0;
+    transition: all 0.3s ease;
+    padding: 10px 10px; /* Add padding for better spacing */
+}
+
+.form-control-sm:focus {
+    border: 1.5px solid #4CAF50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+.placeholder-fade {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    transition: all 0.3s ease;
+    color: #aaa;
+    pointer-events: none;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem; /* Space between fields */
+}
+
+.input-limitations {
+    font-size: 0.8rem;
+    color: #888; /* Light gray for limitations */
+}
+
+.btn-success, .btn-warning {
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #388E3C !important;
+    transform: translateY(-2px);
+}
+
+.btn-warning:hover {
+    background-color: #FF8F00 !important;
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: none;
+    padding: 25px;
+}
+
+.payment-icons {
+    transition: transform 0.3s ease;
+}
+
+.payment-icons:hover {
+    transform: translateY(-5px);
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-container input {
+    padding-top: 20px; /* Space for the floating label */
+}
+
+.input-container label {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    transition: all 0.3s ease;
+    color: #aaa;
+    pointer-events: none;
+}
+
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+    top: -10px; /* Move label up */
+    left: 10px;
+    font-size: 0.75rem; /* Smaller font size */
+    color: #4CAF50; /* Change color on focus */
+}
+
+.row.justify-content-around {
+    margin: 0; /* Remove default margin */
+}
+
+.row {
+    margin: 0; /* Remove default margin */
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 1rem; /* Adjust padding for smaller screens */
+    }
+}
+</style>
+
+<div class="container-fluid my-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card shadow-lg">
+                <!-- Breadcrumb Navigation -->
+                <div class="row mx-auto justify-content-center text-center">
+                    <div class="col-12 mt-3">
+                        <nav aria-label="breadcrumb" class="second">
+                            <ol class="breadcrumb indigo lighten-6 first">
+                                <li class="breadcrumb-item font-weight-bold">
+                                    <a class="text-uppercase" href="{% url 'view_product' 0 %}">
+                                        <span class="mr-md-3 mr-1">BACK TO SHOP</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item font-weight-bold">
+                                    <a class="text-uppercase" href="{% url 'cart' %}">
+                                        <span class="mr-md-3 mr-1">SHOPPING BAG</span>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item font-weight-bold active">
+                                    <span class="mr-md-3 mr-1">CHECKOUT</span>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row justify-content-around">
+                    <div class="col-md-5">
+                        <div class="card border-0">
+                            <div class="card-header pb-0">
+                                <h2 class="card-title space">Payment Details</h2>
+                                <p class="card-text text-muted mt-4 space">CARD INFORMATION</p>
+                                <hr class="my-0">
+                            </div>
+                            <div class="card-body">
+                                <form id="paymentForm" action="{% url 'payment' total %}" method="POST" onsubmit="return validatePaymentForm()">
+                                    {% csrf_token %}
+                                    <div class="form-group input-container">
+                                        <label class="small text-muted mb-1">CARD NUMBER</label>
+                                        <input type="tel" class="form-control form-control-sm" name="cardnumber" placeholder=" " required maxlength="19" oninput="validateCardNumber(this)">
+                                        <small class="input-limitations">Format: 0000 0000 0000 0000 (16 digits)</small>
+                                    </div>
+                                    
+                                    <div class="row no-gutters">
+                                        <div class="col-sm-6 pr-sm-2">
+                                            <div class="form-group input-container">
+                                                <label class="small text-muted mb-1">EXPIRY DATE</label>
+                                                <input type="tel" class="form-control form-control-sm" name="cardex" placeholder=" " required maxlength="5" oninput="validateExpiry(this)">
+                                                <small class="input-limitations">Format: MM/YY (e.g., 12/25)</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group input-container">
+                                                <label class="small text-muted mb-1">CVC CODE</label>
+                                                <input type="tel" class="form-control form-control-sm" name="cvc" placeholder=" " required maxlength="3" oninput="validateCVC(this)">
+                                                <small class="input-limitations">3 digits</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="small text-muted mb-1">AMOUNT</label>
+                                        <input type="text" class="form-control form-control-sm" value="Rs. {{ total }}" readonly>
+                                    </div>
+
+                                    <div class="row mt-4">
+                                        <div class="col-md-6 mb-3">
+                                            <button type="submit" class="btn btn-success btn-block" name="payment_method" value="pay_now">
+                                                Pay Now
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-warning btn-block" onclick="confirmCashOnDelivery()">
+                                                Cash On Delivery
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods Display -->
+                    <div class="col-md-5">
+                        <div class="card border-0">
+                            <div class="card-header card-2">
+                                <p class="card-text text-muted mt-md-4 mb-2 space">ACCEPTED PAYMENT METHODS</p>
+                                <hr class="my-2">
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="row justify-content-between">
+                                    <div class="col-4 payment-icons">
+                                        <img class="img-fluid" src="{% static 'images/atm1.jpg' %}" alt="Payment Method">
+                                    </div>
+                                    <div class="col-4 payment-icons">
+                                        <img class="img-fluid" src="{% static 'images/atm2.jpg' %}" alt="Payment Method">
+                                    </div>
+                                    <div class="col-4 payment-icons">
+                                        <img class="img-fluid" src="{% static 'images/atm3.jpg' %}" alt="Payment Method">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if payment_success %}
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Order placed successfully',
+                        confirmButtonColor: '#4CAF50'
+                    }).then(() => {
+                        window.location = "{% url 'view_booking' %}";
+                    });
+                </script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function validateCardNumber(input) {
+    const value = input.value.replace(/\D/g, '');
+    if (value.length > 16) {
+        input.value = value.slice(0, 16);
+    } else {
+        input.value = value.replace(/(.{4})/g, '$1 ').trim(); // Format as 0000 0000 0000 0000
+    }
+}
+
+function validateExpiry(input) {
+    const value = input.value.replace(/\D/g, '');
+    if (value.length > 4) {
+        input.value = value.slice(0, 4);
+    } else {
+        input.value = value.replace(/(.{2})/, '$1/'); // Format as MM/YY
+    }
+}
+
+function validateCVC(input) {
+    const value = input.value.replace(/\D/g, '');
+    if (value.length > 3) {
+        input.value = value.slice(0, 3);
+    }
+}
+
+function validatePaymentForm() {
+    const cardNumber = document.querySelector('input[name="cardnumber"]').value.replace(/\D/g, '');
+    const cvc = document.querySelector('input[name="cvc"]').value.replace(/\D/g, '');
+    const expiry = document.querySelector('input[name="cardex"]').value;
+
+    // Validate card number
+    if (cardNumber.length !== 16) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Card Number',
+            text: 'Card number must be exactly 16 digits.',
+        });
+        return false;
+    }
+
+    // Validate CVC
+    if (cvc.length !== 3) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid CVC',
+            text: 'CVC must be exactly 3 digits.',
+        });
+        return false;
+    }
+
+    // Validate expiry date format
+    const expiryParts = expiry.split('/');
+    if (expiryParts.length !== 2 || expiryParts[0].length !== 2 || expiryParts[1].length !== 2) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Expiry Date',
+            text: 'Expiry date must be in MM/YY format.',
+        });
+        return false;
+    }
+
+    return true; // All validations passed
+}
+
+function confirmCashOnDelivery() {
+    Swal.fire({
+        title: 'Confirm Cash on Delivery',
+        text: "Your order will be delivered to your address. Pay on delivery.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4CAF50',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Create and submit form for cash on delivery
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'payment' total %}";
+
+            // Add CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+
+            // Add payment method
+            const paymentMethod = document.createElement('input');
+            paymentMethod.type = 'hidden';
+            paymentMethod.name = 'payment_method';
+            paymentMethod.value = 'cash_on_delivery';
+            form.appendChild(paymentMethod);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
+{% if error %}
+Swal.fire({
+    icon: 'error',
+    title: 'Payment Failed',
+    text: 'Please check your details and try again.',
+    confirmButtonColor: '#4CAF50'
+}).then(() => {
+    window.location = "{% url 'payment' total %}";
+});
+{% endif %}
+</script>
+
+{% endblock %}
